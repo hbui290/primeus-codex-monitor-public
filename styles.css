@@ -34,6 +34,50 @@ body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+body[data-theme="control"] {
+  --bg: #0f1318;
+  --bg-soft: #151b21;
+  --panel: rgba(19, 24, 30, 0.92);
+  --panel-strong: rgba(19, 24, 30, 0.96);
+  --ink: #f4f5f6;
+  --muted: #98a1aa;
+  --line: rgba(244, 245, 246, 0.1);
+  --accent: #7fd6ba;
+  --accent-soft: rgba(127, 214, 186, 0.12);
+  --warn: #e1ba73;
+  --warn-soft: rgba(225, 186, 115, 0.14);
+  --danger: #e58d89;
+  --danger-soft: rgba(229, 141, 137, 0.14);
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+  color-scheme: dark;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(127, 214, 186, 0.09), transparent 24%),
+    radial-gradient(circle at 88% 0%, rgba(225, 186, 115, 0.08), transparent 22%),
+    linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+}
+
+body[data-theme="terminal"] {
+  --bg: #07110c;
+  --bg-soft: #0b1712;
+  --panel: rgba(11, 23, 18, 0.92);
+  --panel-strong: rgba(11, 23, 18, 0.96);
+  --ink: #d2ffd9;
+  --muted: #7ca08a;
+  --line: rgba(121, 214, 142, 0.14);
+  --accent: #63df7f;
+  --accent-soft: rgba(99, 223, 127, 0.12);
+  --warn: #d7c56f;
+  --warn-soft: rgba(215, 197, 111, 0.14);
+  --danger: #f38d89;
+  --danger-soft: rgba(243, 141, 137, 0.14);
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.34);
+  color-scheme: dark;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(99, 223, 127, 0.1), transparent 24%),
+    radial-gradient(circle at 88% 0%, rgba(215, 197, 111, 0.08), transparent 20%),
+    linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+}
+
 .skip-link {
   position: absolute;
   left: 16px;
@@ -81,6 +125,18 @@ code {
   align-content: start;
   background:
     linear-gradient(180deg, rgba(23, 98, 79, 0.05), rgba(255, 252, 246, 0.98)),
+    var(--panel-strong);
+}
+
+body[data-theme="control"] .app-nav {
+  background:
+    linear-gradient(180deg, rgba(127, 214, 186, 0.08), rgba(19, 24, 30, 0.96)),
+    var(--panel-strong);
+}
+
+body[data-theme="terminal"] .app-nav {
+  background:
+    linear-gradient(180deg, rgba(99, 223, 127, 0.08), rgba(11, 23, 18, 0.96)),
     var(--panel-strong);
 }
 
@@ -200,8 +256,33 @@ dd {
   gap: 8px;
 }
 
+.nav-preferences {
+  display: grid;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
 .nav-actions .action-button {
   width: 100%;
+}
+
+.nav-preferences .field,
+.nav-preferences .toolbar-group {
+  gap: 8px;
+}
+
+.nav-preferences .field select {
+  background: rgba(255, 255, 255, 0.52);
+}
+
+body[data-theme="control"] .nav-preferences .field select,
+body[data-theme="terminal"] .nav-preferences .field select,
+body[data-theme="control"] .toolbar-toggle,
+body[data-theme="terminal"] .toolbar-toggle,
+body[data-theme="control"] .filter-chip,
+body[data-theme="terminal"] .filter-chip {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-note {
@@ -298,6 +379,42 @@ dd {
 .surface {
   padding: 18px;
   min-width: 0;
+}
+
+body[data-density="compact"] .shell {
+  width: min(1480px, calc(100vw - 28px));
+  padding: 16px 0 24px;
+  gap: 12px;
+}
+
+body[data-density="compact"] .app-nav,
+body[data-density="compact"] .surface {
+  padding: 15px;
+}
+
+body[data-density="compact"] .app-bar {
+  padding: 14px 16px;
+}
+
+body[data-density="compact"] .nav-brand,
+body[data-density="compact"] .nav-actions,
+body[data-density="compact"] .nav-group,
+body[data-density="compact"] .nav-sections,
+body[data-density="compact"] .nav-section,
+body[data-density="compact"] .app-main,
+body[data-density="compact"] .route-pane,
+body[data-density="compact"] .main-stack,
+body[data-density="compact"] .side-stack,
+body[data-density="compact"] .room-feed,
+body[data-density="compact"] .service-list,
+body[data-density="compact"] .chain-list,
+body[data-density="compact"] .doc-stack,
+body[data-density="compact"] .agent-list,
+body[data-density="compact"] .attention-list,
+body[data-density="compact"] .identity-list,
+body[data-density="compact"] .summary-grid,
+body[data-density="compact"] .mini-list {
+  gap: 10px;
 }
 
 .action-status {
@@ -552,6 +669,14 @@ a:focus-visible,
   background: rgba(250, 247, 241, 0.96);
 }
 
+body[data-theme="control"] .data-table thead th {
+  background: rgba(21, 27, 33, 0.96);
+}
+
+body[data-theme="terminal"] .data-table thead th {
+  background: rgba(11, 23, 18, 0.96);
+}
+
 .data-table tbody td {
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
@@ -560,6 +685,11 @@ a:focus-visible,
   line-height: 1.45;
   vertical-align: top;
   overflow-wrap: anywhere;
+}
+
+body[data-density="compact"] .data-table thead th,
+body[data-density="compact"] .data-table tbody td {
+  padding: 10px 12px;
 }
 
 .data-table tbody tr:last-child td {

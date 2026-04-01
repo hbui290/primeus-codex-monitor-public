@@ -24,6 +24,27 @@
           <button class="action-button" id="refresh-button" type="button">Refresh snapshot</button>
         </div>
 
+        <section class="nav-preferences" aria-labelledby="workspace-preferences-label">
+          <p class="nav-section-label" id="workspace-preferences-label">Workspace</p>
+
+          <label class="field" for="appearance-theme">
+            <span class="field-label">Theme</span>
+            <select id="appearance-theme">
+              <option value="paper">Paper</option>
+              <option value="control">Control</option>
+              <option value="terminal">Terminal</option>
+            </select>
+          </label>
+
+          <div class="toolbar-group">
+            <span class="field-label">Density</span>
+            <div class="filter-chip-row" id="appearance-density-controls">
+              <button class="filter-chip" type="button" data-density="comfortable">Comfortable</button>
+              <button class="filter-chip" type="button" data-density="compact">Compact</button>
+            </div>
+          </div>
+        </section>
+
         <div class="nav-sections" aria-label="Sections">
           <section class="nav-section">
             <nav class="nav-group" aria-label="Home">
