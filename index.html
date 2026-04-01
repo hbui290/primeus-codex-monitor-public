@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main class="shell">
+      <aside class="app-nav">
+        <div class="nav-brand">
+          <h1>Agent Control</h1>
+        </div>
+
+        <div class="nav-actions">
+          <button class="action-button" id="refresh-button" type="button">Refresh snapshot</button>
+        </div>
+
+        <div class="nav-sections" aria-label="Sections">
+          <section class="nav-section">
+            <nav class="nav-group" aria-label="Home">
+              <button class="nav-item is-active" type="button" data-route="overview">Home</button>
+            </nav>
+          </section>
+
+          <section class="nav-section" aria-labelledby="nav-group-operations">
+            <p class="nav-section-label" id="nav-group-operations">Operations</p>
+            <nav class="nav-group" aria-label="Operations">
+              <button class="nav-item" type="button" data-route="agents">Agents</button>
+              <button class="nav-item" type="button" data-route="runtime">Runtime</button>
+              <button class="nav-item" type="button" data-route="reports">Reports</button>
+              <button class="nav-item" type="button" data-route="skills">Skills</button>
+            </nav>
+          </section>
+
+          <section class="nav-section" aria-labelledby="nav-group-settings">
+            <p class="nav-section-label" id="nav-group-settings">Settings</p>
+            <nav class="nav-group" aria-label="Settings">
+              <button class="nav-item" type="button" data-route="integrations">Config</button>
+              <button class="nav-item" type="button" data-route="identity">Identity</button>
+              <button class="nav-item" type="button" data-route="audit">Audit</button>
+            </nav>
+          </section>
+        </div>
+      </aside>
+
+      <section class="app-main" id="main-content" tabindex="-1">
+        <header class="app-bar">
+          <div class="app-bar-copy">
+            <p class="eyebrow" id="app-bar-eyebrow" hidden></p>
+            <h2 id="overview-headline">Home</h2>
+            <p class="app-bar-subline" id="overview-subline" hidden></p>
+          </div>
+
+          <div class="app-bar-side">
+            <div class="app-bar-stats" hidden>
+              <div class="stat-chip">
+                <span class="meta-label" id="stat-label-1">Snapshot</span>
+                <strong id="snapshot-ts">Loading...</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="meta-label" id="stat-label-2">Mode</span>
+                <strong id="runtime-mode">-</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="meta-label" id="stat-label-3">Events</span>
+                <strong id="room-event-count">-</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="meta-label" id="stat-label-4">Services</span>
+                <strong id="service-health">-</strong>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="action-status" id="action-status" role="status" aria-live="polite" aria-atomic="true" hidden></section>
+
+        <section class="route-pane is-active" id="route-overview">
+          <section class="content-grid">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <h3>System status</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy" id="home-summary-copy">Waiting for the next snapshot.</p>
+
+                <div class="summary-grid" id="home-summary-grid"></div>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <h3>Needs attention</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy" id="home-attention-summary">Waiting for the next snapshot.</p>
+
+                <ul class="attention-list" id="home-attention-list"></ul>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <h3>Recent activity</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy" id="room-feed-summary">Waiting for the next snapshot.</p>
+                <div class="coordination-actions" id="coordination-actions"></div>
+                <ul class="mini-list mini-list--activity" id="room-feed"></ul>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <h3>Current snapshot</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy" id="home-system-summary">Waiting for the next snapshot.</p>
+
+                <div class="coordination-actions" id="home-system-actions"></div>
+
+                <section class="stack-section stack-section--first">
+                  <span class="meta-label">Snapshot at a glance</span>
+                  <dl class="fact-grid fact-grid--stack fact-grid--compact" id="home-system-facts"></dl>
+                </section>
+
+                <section class="stack-section" id="home-system-issues-section" hidden>
+                  <span class="meta-label">Service issues</span>
+                  <ul class="service-list" id="service-list"></ul>
+                </section>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-agents" hidden>
+          <section class="content-grid content-grid--agents">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Roster</p>
+                    <h3>Agent control table</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy">Current state stays read-only. The selected agent profile on the right controls naming, linked identity files, lane notes, and operating policy.</p>
+
+                <div class="surface-toolbar">
+                  <label class="toolbar-search" for="agent-filter-input">
+                    <span class="meta-label">Filter agents</span>
+                    <input id="agent-filter-input" type="search" placeholder="Search by name, lane, provider, or status" />
+                  </label>
+                </div>
+
+                <div class="table-wrap">
+                  <table class="data-table" aria-label="Agent table">
+                    <thead>
+                      <tr>
+                        <th>Agent</th>
+                        <th>Status</th>
+                        <th>Lane</th>
+                        <th>Threads</th>
+                        <th>Approvals</th>
+                        <th>Health</th>
+                      </tr>
+                    </thead>
+                    <tbody id="agent-table-body"></tbody>
+                  </table>
+                </div>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Review</p>
+                    <h3>Needs review</h3>
+                  </div>
+                </header>
+
+                <ul class="attention-list" id="agent-attention-list"></ul>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Editor</p>
+                    <h3>Selected agent</h3>
+                  </div>
+                </header>
+
+                <div class="editor-meta">
+                  <strong id="agent-editor-title">Select an agent</strong>
+                  <p id="agent-editor-summary">Pick an agent from the table to inspect current state and edit its control profile.</p>
+                </div>
+
+                <section class="stack-section">
+                  <span class="meta-label">Current state</span>
+                  <dl class="fact-grid fact-grid--stack fact-grid--compact" id="agent-live-facts"></dl>
+                </section>
+
+                <section class="stack-section">
+                  <span class="meta-label">Linked files</span>
+                  <ul class="mini-list" id="agent-linked-files"></ul>
+                </section>
+
+                <form class="control-form" id="agent-form">
+                  <div class="form-grid">
+                    <label class="field">
+                      <span class="field-label">Display name</span>
+                      <input id="agent-display-name" name="display_name" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Provider</span>
+                      <input id="agent-provider" name="provider" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field field--full">
+                      <span class="field-label">Lane</span>
+                      <input id="agent-lane" name="lane" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Mode target</span>
+                      <input id="agent-mode-target" name="mode_target" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Approval policy</span>
+                      <input id="agent-approval-policy" name="approval_policy" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Soul file</span>
+                      <select id="agent-soul-file" name="soul_file"></select>
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Identity file</span>
+                      <select id="agent-identity-file" name="identity_file"></select>
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Memory file</span>
+                      <select id="agent-memory-file" name="memory_file"></select>
+                    </label>
+                    <label class="field field--full">
+                      <span class="field-label">Notes</span>
+                      <textarea id="agent-notes" name="notes" class="textarea-compact" spellcheck="false"></textarea>
+                    </label>
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="action-button" id="agent-reload-button" type="button">Reload profile</button>
+                    <button class="action-button action-button--primary" id="agent-save-button" type="submit">Save agent profile</button>
+                  </div>
+                </form>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Policy</p>
+                    <h3>Control summary</h3>
+                  </div>
+                </header>
+
+                <dl class="fact-grid fact-grid--stack" id="agent-summary-grid"></dl>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-runtime" hidden>
+          <section class="content-grid content-grid--runtime">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Health</p>
+                    <h3>Runtime health</h3>
+                  </div>
+                </header>
+
+                <dl class="fact-grid">
+                  <div>
+                    <dt>Release</dt>
+                    <dd id="runtime-release-version">-</dd>
+                  </div>
+                  <div>
+                    <dt>Send mode</dt>
+                    <dd id="runtime-send-mode">-</dd>
+                  </div>
+                  <div>
+                    <dt>Recommended mode</dt>
+                    <dd id="runtime-recommended-mode-detail">-</dd>
+                  </div>
+                  <div>
+                    <dt>Manager heartbeat</dt>
+                    <dd id="runtime-manager-heartbeat">-</dd>
+                  </div>
+                </dl>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Workers</p>
+                    <h3>Worker freshness</h3>
+                  </div>
+                </header>
+
+                <div class="agent-list" id="runtime-worker-list"></div>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Latest reports</p>
+                    <h3>Monitoring and drift</h3>
+                  </div>
+                </header>
+
+                <section class="stack-section">
+                  <span class="meta-label">Monitoring snapshot</span>
+                  <dl class="fact-grid fact-grid--stack fact-grid--compact" id="runtime-monitoring-grid"></dl>
+                </section>
+
+                <section class="stack-section">
+                  <span class="meta-label">Drift watch</span>
+                  <ul class="attention-list" id="runtime-drift-list"></ul>
+                </section>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Controls</p>
+                    <h3>Runtime actions</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy">Restart a service when the runtime needs intervention. The dashboard refreshes after each action.</p>
+
+                <div class="control-stack" id="runtime-control-list"></div>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-reports" hidden>
+          <section class="reports-view reports-view--board" id="reports-board-view">
+            <section class="content-grid">
+              <div class="main-stack">
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Review</p>
+                      <h3>Needs Review Now</h3>
+                    </div>
+                  </header>
+
+                  <p class="section-copy" id="reports-action-summary">Waiting for the next snapshot.</p>
+
+                  <ul class="attention-list" id="reports-action-list"></ul>
+                </article>
+
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Threads</p>
+                      <h3>KOL status board</h3>
+                    </div>
+                  </header>
+
+                  <p class="section-copy">This board is for fast scanning only. Open a row to inspect the full thread inside the same workspace.</p>
+
+                  <div class="surface-toolbar surface-toolbar--stack">
+                    <div class="surface-toolbar-row">
+                      <div class="toolbar-group">
+                        <span class="meta-label">Saved views</span>
+                        <div class="filter-chip-row" id="report-watchlist-mode-filters" aria-label="Watchlist filters">
+                          <button class="filter-chip is-active" type="button" data-watchlist-mode="all" data-watchlist-label="All">All</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="manual" data-watchlist-label="Manual Review">Manual Review</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="priority" data-watchlist-label="High Priority">High Priority</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="green" data-watchlist-label="Green Lane">Green Lane</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="waiting" data-watchlist-label="Waiting on KOL">Waiting on KOL</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="john" data-watchlist-label="John">John</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="sora" data-watchlist-label="Sora">Sora</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="surface-toolbar-row surface-toolbar-row--board">
+                      <label class="toolbar-search" for="report-watchlist-filter">
+                        <span class="meta-label">Search board</span>
+                        <input id="report-watchlist-filter" type="search" placeholder="Search by KOL, issue, owner, lane, or inbound text" />
+                      </label>
+
+                      <label class="toolbar-select" for="report-watchlist-sort">
+                        <span class="meta-label">Sort</span>
+                        <select id="report-watchlist-sort">
+                          <option value="priority">Highest priority</option>
+                          <option value="due">Due soonest</option>
+                          <option value="owner">Owner</option>
+                          <option value="state">Current state</option>
+                          <option value="lane">Decision lane</option>
+                        </select>
+                      </label>
+
+                      <fieldset class="toolbar-toggles" id="report-watchlist-columns">
+                        <legend class="meta-label">Visible properties</legend>
+                        <div class="toolbar-toggle-grid">
+                          <label class="toolbar-toggle">
+                            <input type="checkbox" value="owner" checked />
+                            <span>Owner</span>
+                          </label>
+                          <label class="toolbar-toggle">
+                            <input type="checkbox" value="lane" checked />
+                            <span>Lane</span>
+                          </label>
+                          <label class="toolbar-toggle">
+                            <input type="checkbox" value="due" checked />
+                            <span>Due</span>
+                          </label>
+                          <label class="toolbar-toggle">
+                            <input type="checkbox" value="latest" checked />
+                            <span>Latest inbound</span>
+                          </label>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+
+                  <div class="table-wrap">
+                    <table class="data-table data-table--board-compact" aria-label="KOL status board">
+                      <thead>
+                        <tr id="reports-watchlist-head-row"></tr>
+                      </thead>
+                      <tbody id="reports-watchlist-table-body"></tbody>
+                    </table>
+                  </div>
+                </article>
+              </div>
+
+              <aside class="side-stack">
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Selection</p>
+                      <h3>Selected Thread</h3>
+                    </div>
+                  </header>
+
+                  <p class="section-copy" id="approval-inspector-summary">Pick a row from the board to inspect why it matters and what should happen next.</p>
+
+                  <section class="stack-section stack-section--first">
+                    <span class="meta-label">Current focus</span>
+                    <dl class="fact-grid fact-grid--stack fact-grid--compact" id="approval-inspector-facts"></dl>
+                  </section>
+
+                  <section class="stack-section">
+                    <span class="meta-label">Suggested next step</span>
+                    <ul class="mini-list" id="approval-inspector-actions"></ul>
+                  </section>
+                </article>
+
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Queue mix</p>
+                      <h3>Decision buckets</h3>
+                    </div>
+                  </header>
+
+                  <p class="section-copy" id="reports-state-summary">Waiting for the next snapshot.</p>
+
+                  <ul class="attention-list" id="reports-state-list"></ul>
+                </article>
+
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Reports</p>
+                      <h3>Selected report run</h3>
+                    </div>
+                  </header>
+
+                  <p class="section-copy" id="reports-run-summary">Pick a report run to inspect its coverage and freshness.</p>
+
+                    <section class="stack-section stack-section--first">
+                      <span class="meta-label">Current run</span>
+                      <dl class="fact-grid fact-grid--stack fact-grid--compact" id="reports-run-facts"></dl>
+                    </section>
+                </article>
+
+                <article class="surface">
+                  <header class="section-head">
+                    <div>
+                      <p class="eyebrow">Runs</p>
+                      <h3>Report runs</h3>
+                    </div>
+                  </header>
+
+                  <div class="table-wrap">
+                    <table class="data-table data-table--compact" aria-label="Report runs">
+                      <thead>
+                        <tr>
+                          <th>Report</th>
+                          <th>Generated</th>
+                          <th>Rows</th>
+                        </tr>
+                      </thead>
+                      <tbody id="reports-run-table-body"></tbody>
+                    </table>
+                  </div>
+                </article>
+              </aside>
+            </section>
+          </section>
+
+          <section class="reports-view reports-view--detail" id="reports-detail-view" hidden>
+            <article class="surface reports-detail-shell">
+              <div class="reports-detail-topbar">
+                <button class="action-button" id="reports-detail-back" type="button">Back to board</button>
+                <span class="meta-label" id="reports-detail-path">Reports / Thread</span>
+              </div>
+
+              <header class="reports-detail-header">
+                <div>
+                  <p class="eyebrow">Thread record</p>
+                  <h3 id="reports-detail-title">No thread selected</h3>
+                </div>
+                <div class="reports-detail-badges" id="reports-detail-badges"></div>
+              </header>
+
+              <p class="section-copy" id="reports-thread-summary">Open a row from the board to inspect the full operator record.</p>
+
+              <section class="reports-detail-grid">
+                <div class="reports-detail-main">
+                  <section class="stack-section stack-section--first">
+                    <span class="meta-label">Thread summary</span>
+                    <dl class="fact-grid" id="reports-thread-facts"></dl>
+                  </section>
+
+                  <section class="stack-section">
+                    <span class="meta-label">Conversation context</span>
+                    <ul class="mini-list" id="reports-detail-context"></ul>
+                  </section>
+
+                  <section class="stack-section">
+                    <span class="meta-label">Related report and runtime context</span>
+                    <ul class="mini-list" id="reports-detail-runtime"></ul>
+                  </section>
+                </div>
+
+                <aside class="reports-detail-side">
+                  <section class="stack-section stack-section--first">
+                    <span class="meta-label">Next move</span>
+                    <ul class="mini-list" id="reports-thread-actions"></ul>
+                  </section>
+                </aside>
+              </section>
+            </article>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-integrations" hidden>
+          <section class="content-grid">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Config</p>
+                    <h3>Connections and bindings</h3>
+                  </div>
+                </header>
+
+                <div class="agent-list" id="integration-list"></div>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Edit</p>
+                    <h3>Gateway config and secrets</h3>
+                  </div>
+                </header>
+
+                <form class="control-form" id="integrations-form">
+                  <div class="form-grid">
+                    <label class="field">
+                      <span class="field-label">Primary model</span>
+                      <input id="integration-primary-model" name="primary_model" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Search provider</span>
+                      <input id="integration-search-provider" name="search_provider" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">DM policy</span>
+                      <input id="integration-dm-policy" name="dm_policy" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Group policy</span>
+                      <input id="integration-group-policy" name="group_policy" type="text" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Gateway port</span>
+                      <input id="integration-gateway-port" name="gateway_port" type="number" min="1" step="1" />
+                    </label>
+                    <div class="field field--readonly">
+                      <span class="field-label">OAuth profile</span>
+                      <p id="integration-oauth-summary">-</p>
+                    </div>
+                  </div>
+
+                  <div class="form-grid">
+                    <label class="field">
+                      <span class="field-label">Gateway token</span>
+                      <input id="integration-gateway-token" name="gateway_token" type="password" placeholder="Leave blank to keep current token" autocomplete="off" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Brave API key</span>
+                      <input id="integration-brave-key" name="brave_api_key" type="password" placeholder="Leave blank to keep current key" autocomplete="off" />
+                    </label>
+                    <label class="field field--full">
+                      <span class="field-label">Telegram bot token</span>
+                      <input id="integration-telegram-token" name="telegram_bot_token" type="password" placeholder="Leave blank to keep current token" autocomplete="off" />
+                    </label>
+                  </div>
+
+                  <p class="form-note">Secrets stay masked in the dashboard. Leave secret inputs blank to keep existing values. OAuth stays read-only because sign-in still happens outside this panel.</p>
+
+                  <div class="form-actions">
+                    <button class="action-button action-button--primary" id="integrations-save-button" type="submit">Save configuration</button>
+                    <button class="action-button" id="restart-gateway-button" type="button">Restart gateway</button>
+                  </div>
+                </form>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Bindings</p>
+                    <h3>Active configuration</h3>
+                  </div>
+                </header>
+
+                <dl class="fact-grid fact-grid--stack" id="integration-summary-grid"></dl>
+
+                <section class="stack-section">
+                  <span class="meta-label">Security</span>
+                  <ul class="mini-list" id="integration-security-list"></ul>
+                </section>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-skills" hidden>
+          <section class="content-grid">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Skills</p>
+                    <h3>Installed skill inventory</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy">This list comes from `openclaw skills list --json` on the VPS, so ready/setup states reflect current OpenClaw requirements instead of guessed labels.</p>
+
+                <div class="table-wrap">
+                  <table class="data-table" aria-label="Skills inventory">
+                    <thead>
+                      <tr>
+                        <th>Skill</th>
+                        <th>Status</th>
+                        <th>Source</th>
+                        <th>Primary env</th>
+                        <th>Requirements</th>
+                      </tr>
+                    </thead>
+                    <tbody id="skills-table-body"></tbody>
+                  </table>
+                </div>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Install</p>
+                    <h3>Add or update a skill</h3>
+                  </div>
+                </header>
+
+                <form class="control-form" id="skills-install-form">
+                  <div class="form-grid">
+                    <label class="field field--full">
+                      <span class="field-label">Skill slug</span>
+                      <input id="skill-install-slug" name="slug" type="text" autocomplete="off" placeholder="example-skill-slug" />
+                    </label>
+                    <label class="field">
+                      <span class="field-label">Version</span>
+                      <input id="skill-install-version" name="version" type="text" autocomplete="off" placeholder="optional" />
+                    </label>
+                    <label class="field field-checkbox">
+                      <span class="field-label">Overwrite existing</span>
+                      <label class="checkbox-row">
+                        <input id="skill-install-force" name="force" type="checkbox" />
+                        <span>Use <code>--force</code> during install</span>
+                      </label>
+                    </label>
+                  </div>
+
+                  <p class="form-note">Use a known ClawHub slug here. This panel installs by slug and then refreshes the latest snapshot.</p>
+
+                  <div class="form-actions">
+                    <button class="action-button action-button--primary" id="skills-install-button" type="submit">Install skill</button>
+                  </div>
+                </form>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Summary</p>
+                    <h3>Skill coverage</h3>
+                  </div>
+                </header>
+
+                <div class="table-wrap">
+                  <table class="data-table data-table--compact" aria-label="Skill summary">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody id="skills-summary-table-body"></tbody>
+                  </table>
+                </div>
+
+                <section class="stack-section">
+                  <span class="meta-label">Install lane</span>
+                  <ul class="mini-list" id="skills-install-list"></ul>
+                </section>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-identity" hidden>
+          <section class="content-grid">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Editor</p>
+                    <h3>Core files editor</h3>
+                  </div>
+                </header>
+
+                <p class="section-copy">These files define voice, identity, user context, memory, and workspace startup rules. Saving here writes straight back to the VPS.</p>
+
+                <div class="editor-meta">
+                  <strong id="identity-editor-title">Select a file</strong>
+                  <p id="identity-editor-summary">Choose one of the core identity files to edit and save back to the VPS.</p>
+                </div>
+
+                <div class="stack-section">
+                  <span class="meta-label">Remote path</span>
+                  <p class="section-copy" id="identity-editor-path">-</p>
+                </div>
+
+                <div class="tab-strip" id="identity-editor-tabs"></div>
+
+                <form class="control-form" id="identity-form">
+                  <label class="field field--full">
+                    <span class="field-label">Content</span>
+                    <textarea id="identity-editor" name="content" spellcheck="false"></textarea>
+                  </label>
+
+                  <div class="form-actions">
+                    <button class="action-button" id="identity-reload-button" type="button">Reload from VPS</button>
+                    <button class="action-button action-button--primary" id="identity-save-button" type="submit">Save file</button>
+                  </div>
+                </form>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Identity pack</p>
+                    <h3>Core operating identity</h3>
+                  </div>
+                </header>
+
+                <div class="identity-list" id="identity-list"></div>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Continuity</p>
+                    <h3>Files and rules</h3>
+                  </div>
+                </header>
+
+                <section class="stack-section">
+                  <span class="meta-label">Core files</span>
+                  <ul class="mini-list" id="identity-doc-list"></ul>
+                </section>
+
+                <section class="stack-section">
+                  <span class="meta-label">Working rules</span>
+                  <ul class="mini-list" id="identity-rule-list"></ul>
+                </section>
+              </article>
+            </aside>
+          </section>
+        </section>
+
+        <section class="route-pane" id="route-audit" hidden>
+          <section class="content-grid">
+            <div class="main-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Coordination trail</p>
+                    <h3>Room activity</h3>
+                  </div>
+                </header>
+
+                <div class="room-feed" id="audit-room-feed"></div>
+              </article>
+
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Runtime trail</p>
+                    <h3>Recent system events</h3>
+                  </div>
+                </header>
+
+                <ul class="attention-list" id="audit-event-list"></ul>
+              </article>
+            </div>
+
+            <aside class="side-stack">
+              <article class="surface">
+                <header class="section-head">
+                  <div>
+                    <p class="eyebrow">Evidence</p>
+                    <h3>Audit summary</h3>
+                  </div>
+                </header>
+
+                <dl class="fact-grid fact-grid--stack" id="audit-summary-grid"></dl>
+
+                <section class="stack-section">
+                  <span class="meta-label">Recent doc updates</span>
+                  <ul class="mini-list" id="audit-doc-list"></ul>
+                </section>
+              </article>
+            </aside>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

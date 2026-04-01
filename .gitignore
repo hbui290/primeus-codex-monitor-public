@@ -1,0 +1,6 @@
+.DS_Store
+.monitor.log
+.monitor.pid
+__pycache__/
+data/dashboard.json
+data/action_audit.jsonl

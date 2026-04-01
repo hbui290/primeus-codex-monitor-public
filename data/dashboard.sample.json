@@ -1,0 +1,2962 @@
+{
+  "generated_at": "2026-04-01T09:31:54+07:00",
+  "snapshot_status": "ready",
+  "source": "Sample dashboard snapshot",
+  "sync_error": "",
+  "stale": false,
+  "room_state": {
+    "current_topic": "sample-approval-review",
+    "current_owner": "primeus",
+    "status": "in_progress",
+    "last_action": "Sample workflow is ready for review in the public demo.",
+    "needs_boss": "approval review"
+  },
+  "room_meta": {
+    "event_count": 3,
+    "latest_event_ts": "2026-04-01T09:05:00+07:00",
+    "helper_status": {
+      "dir": "/home/operator/.openclaw/workspace/scripts/primeus_codex_room",
+      "status": "ready"
+    }
+  },
+  "runtime": {
+    "recommended_mode": "shadow",
+    "services": [
+      {
+        "name": "openclaw-gateway.service",
+        "status": "active"
+      },
+      {
+        "name": "kol-manager.service",
+        "status": "active"
+      },
+      {
+        "name": "tg-worker-alpha.service",
+        "status": "active"
+      },
+      {
+        "name": "tg-worker-beta.service",
+        "status": "active"
+      }
+    ],
+    "detail": {
+      "health": {
+        "generated_at": "2026-03-31T18:02:47+00:00",
+        "overall_status": "healthy",
+        "release_version": "2026-03-29-r3",
+        "send_mode": "shadow",
+        "recommended_mode": "shadow",
+        "manager_heartbeat_stale": false,
+        "total_active_threads": 35,
+        "codex_required_for_daily_ops": false
+      },
+      "monitoring": {
+        "generated_at": "2026-03-31T18:00:27Z",
+        "summary": {
+          "cash_approved_count": 0,
+          "closed_count": 1,
+          "escalation_count": 1,
+          "followup_due": 0,
+          "messaged": 36,
+          "negotiating": 12,
+          "pending_approval_count": 4,
+          "replied": 16,
+          "total_threads": 36
+        }
+      },
+      "shadow_review": {
+        "generated_at": "2026-03-30T08:03:27Z",
+        "summary": {
+          "cash_approved_count": 0,
+          "closed_count": 0,
+          "escalation_count": 1,
+          "followup_due": 0,
+          "messaged": 7,
+          "negotiating": 2,
+          "pending_approval_count": 3,
+          "replied": 5,
+          "total_threads": 7
+        },
+        "top_rows": [
+          {
+            "kol_username": "@sample_kol_1",
+            "owner_account": "sora",
+            "review_reason": "approval_blocked",
+            "review_priority": 100,
+            "status": "awaiting_human_approval",
+            "decision_lane": "yellow_guarded_auto_send"
+          },
+          {
+            "kol_username": "@sample_kol_2",
+            "owner_account": "john",
+            "review_reason": "approval_status_mismatch",
+            "review_priority": 85,
+            "status": "awaiting_human_approval",
+            "decision_lane": "red_hold_primeus_review"
+          },
+          {
+            "kol_username": "@sample_kol_3",
+            "owner_account": "john",
+            "review_reason": "approval_status_mismatch",
+            "review_priority": 85,
+            "status": "awaiting_human_approval",
+            "decision_lane": "red_hold_primeus_review"
+          },
+          {
+            "kol_username": "@sample_kol_4",
+            "owner_account": "john",
+            "review_reason": "review_sample",
+            "review_priority": 10,
+            "status": "awaiting_kol_decision",
+            "decision_lane": "green_auto_send"
+          }
+        ]
+      },
+      "workers": [
+        {
+          "account_id": "john",
+          "status": "healthy",
+          "score": 100,
+          "assigned_threads": 19,
+          "approval_blocked": 3,
+          "session_ready": true,
+          "heartbeat_stale": false,
+          "inbox_stale": false,
+          "recommended_mode": "shadow",
+          "service": "active"
+        },
+        {
+          "account_id": "sora",
+          "status": "healthy",
+          "score": 100,
+          "assigned_threads": 16,
+          "approval_blocked": 1,
+          "session_ready": true,
+          "heartbeat_stale": false,
+          "inbox_stale": false,
+          "recommended_mode": "shadow",
+          "service": "active"
+        }
+      ]
+    }
+  },
+  "agents": {
+    "summary": {
+      "release_version": "2026-03-29-r3",
+      "recommended_mode": "shadow",
+      "codex_required_for_daily_ops": false,
+      "total_active_threads": 35,
+      "ready_count": 4,
+      "attention_count": 0,
+      "room_helper_status": "ready"
+    },
+    "items": [
+      {
+        "id": "primeus",
+        "label": "Primeus",
+        "kind": "Orchestrator",
+        "handle": "OpenClaw / Telegram",
+        "status": "active",
+        "summary": "Owns boss intake, approval flow, and Codex delegation.",
+        "live": {
+          "service": "active",
+          "protocol": "ready",
+          "privilege": "sudo -n",
+          "threads": "",
+          "approvals": "",
+          "score": "",
+          "route": "room + canonical docs"
+        },
+        "metrics": [
+          {
+            "label": "Lane",
+            "value": "room + canonical docs"
+          },
+          {
+            "label": "Privilege",
+            "value": "sudo -n"
+          },
+          {
+            "label": "Service",
+            "value": "active"
+          }
+        ],
+        "controls": {
+          "display_name": "Primeus",
+          "provider": "OpenClaw Control",
+          "lane": "Room + canonical docs",
+          "mode_target": "Orchestrate",
+          "approval_policy": "Escalate only for approvals, OTP, access, or real business decisions.",
+          "soul_file": "SOUL.md",
+          "identity_file": "IDENTITY.md",
+          "memory_file": "MEMORY.md",
+          "notes": "Owns boss intake, approval flow, and Codex delegation.",
+          "updated_at": "2026-03-31T19:50:30+07:00"
+        }
+      },
+      {
+        "id": "codex",
+        "label": "Codex",
+        "kind": "Technical Worker",
+        "handle": "bundled coding-agent",
+        "status": "ready",
+        "summary": "Handles build, patch, and verification work on the VPS.",
+        "live": {
+          "service": "n/a",
+          "protocol": "ready",
+          "privilege": "sudo -n via primeus",
+          "threads": "",
+          "approvals": "",
+          "score": "",
+          "route": "bash-first",
+          "login": "ready",
+          "skill": "ready"
+        },
+        "metrics": [
+          {
+            "label": "Login",
+            "value": "ready"
+          },
+          {
+            "label": "Skill",
+            "value": "ready"
+          },
+          {
+            "label": "Route",
+            "value": "bash-first"
+          }
+        ],
+        "controls": {
+          "display_name": "Codex",
+          "provider": "Codex CLI",
+          "lane": "Bundled coding-agent bash-first",
+          "mode_target": "Build and verify",
+          "approval_policy": "No high-risk external action without Primeus review.",
+          "soul_file": "SOUL.md",
+          "identity_file": "AGENTS.md",
+          "memory_file": "MEMORY.md",
+          "notes": "Handles build, patch, deploy, and verification work on the VPS.",
+          "updated_at": ""
+        }
+      },
+      {
+        "id": "john",
+        "label": "John",
+        "kind": "Execution Worker",
+        "handle": "@worker_alpha",
+        "status": "active",
+        "summary": "Owns outreach and reply execution on the alpha worker lane.",
+        "metrics": [
+          {
+            "label": "Threads",
+            "value": "19"
+          },
+          {
+            "label": "Approvals",
+            "value": "3"
+          },
+          {
+            "label": "Score",
+            "value": "100"
+          }
+        ],
+        "live": {
+          "service": "active",
+          "protocol": "session ready",
+          "privilege": "runtime worker",
+          "threads": "19",
+          "approvals": "3",
+          "score": "100",
+          "route": "shadow"
+        },
+        "service": "active",
+        "session_ready": true,
+        "heartbeat_stale": false,
+        "inbox_stale": false,
+        "controls": {
+          "display_name": "John",
+          "provider": "Telegram execution worker",
+          "lane": "Live outreach lane",
+          "mode_target": "Execute in shadow-first mode",
+          "approval_policy": "Cash and high-risk outbound stay behind approval.",
+          "soul_file": "SOUL.md",
+          "identity_file": "AGENTS.md",
+          "memory_file": "MEMORY.md",
+          "notes": "Owns outreach and live reply execution on the alpha worker lane.",
+          "updated_at": ""
+        }
+      },
+      {
+        "id": "sora",
+        "label": "Sora",
+        "kind": "Execution Worker",
+        "handle": "@worker_beta",
+        "status": "active",
+        "summary": "Owns outreach and reply execution on the beta worker lane.",
+        "metrics": [
+          {
+            "label": "Threads",
+            "value": "16"
+          },
+          {
+            "label": "Approvals",
+            "value": "1"
+          },
+          {
+            "label": "Score",
+            "value": "100"
+          }
+        ],
+        "live": {
+          "service": "active",
+          "protocol": "session ready",
+          "privilege": "runtime worker",
+          "threads": "16",
+          "approvals": "1",
+          "score": "100",
+          "route": "shadow"
+        },
+        "service": "active",
+        "session_ready": true,
+        "heartbeat_stale": false,
+        "inbox_stale": false,
+        "controls": {
+          "display_name": "Sora",
+          "provider": "Telegram execution worker",
+          "lane": "Live outreach lane",
+          "mode_target": "Execute in shadow-first mode",
+          "approval_policy": "Cash and high-risk outbound stay behind approval.",
+          "soul_file": "SOUL.md",
+          "identity_file": "AGENTS.md",
+          "memory_file": "MEMORY.md",
+          "notes": "Owns outreach and live reply execution on the beta worker lane.",
+          "updated_at": ""
+        }
+      }
+    ],
+    "editor": {
+      "base_hash": "378ec45de73e3910e9fd9de1a702d497379c3fdccf72f2c53ee34a12795434f0",
+      "file": "/home/operator/.openclaw/workspace/AGENT_CONTROL.json",
+      "identity_files": [
+        "SOUL.md",
+        "IDENTITY.md",
+        "USER.md",
+        "MEMORY.md",
+        "AGENTS.md"
+      ]
+    }
+  },
+  "reports": {
+    "runs": [
+      {
+        "id": "daily",
+        "label": "Daily",
+        "generated_at": "2026-03-31T03:00:18Z",
+        "row_count": 7,
+        "json_count": 2,
+        "html_count": 5,
+        "latest_json": "latest.json",
+        "latest_html": "latest.html",
+        "summary": "7 threads, 4 approvals, 1 escalation"
+      },
+      {
+        "id": "monitoring",
+        "label": "Monitoring",
+        "generated_at": "2026-03-31T18:00:27Z",
+        "row_count": 35,
+        "json_count": 12,
+        "html_count": 15,
+        "latest_json": "latest.json",
+        "latest_html": "latest.html",
+        "summary": "36 threads, 4 approvals, 1 escalation"
+      },
+      {
+        "id": "shadow-review",
+        "label": "Shadow review",
+        "generated_at": "2026-03-30T08:03:27Z",
+        "row_count": 7,
+        "json_count": 6,
+        "html_count": 6,
+        "latest_json": "latest.json",
+        "latest_html": "latest.html",
+        "summary": "7 threads, 3 approvals, 1 escalation"
+      }
+    ],
+    "watchlist": [
+      {
+        "label": "@sample_kol_1",
+        "kol_username": "@sample_kol_1",
+        "issue": "Approval Blocked",
+        "issue_label": "Approval Blocked",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "lane": "Red Hold Primeus Review",
+        "lane_label": "Red Hold Primeus Review",
+        "status": "Awaiting Human Approval",
+        "status_label": "Awaiting Human Approval",
+        "priority": 100,
+        "priority_score": 100,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "",
+        "offer_summary": "Standard non-cash bundle",
+        "blocker_summary": "Cash Only",
+        "escalation_summary": "Pending Human - Cash Only - Cash-only insist after policy attempts in pilot flow.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_1 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Pricing",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "label": "@sample_kol_2",
+        "kol_username": "@sample_kol_2",
+        "issue": "Approval Status Mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Red Hold Primeus Review",
+        "lane_label": "Red Hold Primeus Review",
+        "status": "Awaiting Human Approval",
+        "status_label": "Awaiting Human Approval",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T18:55:44+00:00",
+        "offer_summary": "USDT capped VPS bundle",
+        "blocker_summary": "Cash Only",
+        "escalation_summary": "Approved - Cash Only - cash-only ask on VPS",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_2 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Pricing",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "label": "@sample_kol_3",
+        "kol_username": "@sample_kol_3",
+        "issue": "Approval Status Mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Red Hold Primeus Review",
+        "lane_label": "Red Hold Primeus Review",
+        "status": "Awaiting Human Approval",
+        "status_label": "Awaiting Human Approval",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T19:57:47+00:00",
+        "offer_summary": "cash reframe in progress",
+        "blocker_summary": "Quote Given",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_3 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Quote Given",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "label": "@sample_kol_4",
+        "kol_username": "@sample_kol_4",
+        "issue": "Approval Status Mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Red Hold Primeus Review",
+        "lane_label": "Red Hold Primeus Review",
+        "status": "Awaiting Human Approval",
+        "status_label": "Awaiting Human Approval",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T21:44:59+00:00",
+        "offer_summary": "Intro bundle draft",
+        "blocker_summary": "Pricing Unknown",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_4 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Pricing",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "label": "@sample_kol_5",
+        "kol_username": "@sample_kol_5",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-03-31T18:53:56+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "The thread is still in a waiting window.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_5 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_6",
+        "kol_username": "@sample_kol_6",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_6 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_7",
+        "kol_username": "@sample_kol_7",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_7 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_8",
+        "kol_username": "@sample_kol_8",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_8 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_9",
+        "kol_username": "@sample_kol_9",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_9 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_10",
+        "kol_username": "@sample_kol_10",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "john",
+        "owner_label": "John",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_10 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_11",
+        "kol_username": "@sample_kol_11",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_11 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "label": "@sample_kol_12",
+        "kol_username": "@sample_kol_12",
+        "issue": "Waiting On KOL",
+        "issue_label": "Waiting On KOL",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "lane": "Green Auto Send",
+        "lane_label": "Green Auto Send",
+        "status": "Awaiting KOL Decision",
+        "status_label": "Awaiting KOL Decision",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply and monitor",
+        "next_action_owner": "Kol",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "offer_summary": "No offer context",
+        "blocker_summary": "Lead is asking for more context and can stay in a green lane.",
+        "escalation_summary": "Pending human review for this sample case.",
+        "operator_note": "This row is included to demonstrate the watchlist view.",
+        "latest_inbound_message": "@sample_kol_12 is highlighted in the sample watchlist.",
+        "latest_inbound_request": "Info Request",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      }
+    ],
+    "board_rows": [
+      {
+        "thread_id": "sample-thread-001",
+        "label": "@sample_kol_1",
+        "kol_username": "@sample_kol_1",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "approval blocked",
+        "issue_label": "Approval Blocked",
+        "status": "awaiting_human_approval",
+        "status_label": "Awaiting Human Approval",
+        "lane": "red_hold_primeus_review",
+        "lane_label": "Red Hold Primeus Review",
+        "priority": 100,
+        "priority_score": 100,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "",
+        "latest_inbound_message": "@sample_kol_1 requested a change that needs manual review before reply.",
+        "latest_inbound_request": "Pricing review",
+        "offer_summary": "Standard campaign package",
+        "blocker_summary": "Human review required",
+        "escalation_summary": "Pending human review for this sample approval case.",
+        "operator_note": "Keep this sample thread paused until a reviewer confirms the next move.",
+        "urgency": "high",
+        "approval_pressure": "Blocked",
+        "source": "Monitoring report",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "thread_id": "sample-thread-002",
+        "label": "@sample_kol_2",
+        "kol_username": "@sample_kol_2",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "approval status mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "status": "awaiting_human_approval",
+        "status_label": "Awaiting Human Approval",
+        "lane": "red_hold_primeus_review",
+        "lane_label": "Red Hold Primeus Review",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T18:55:44+00:00",
+        "latest_inbound_message": "@sample_kol_2 requested a change that needs manual review before reply.",
+        "latest_inbound_request": "Pricing review",
+        "offer_summary": "Standard campaign package",
+        "blocker_summary": "Human review required",
+        "escalation_summary": "Pending human review for this sample approval case.",
+        "operator_note": "Keep this sample thread paused until a reviewer confirms the next move.",
+        "urgency": "normal",
+        "approval_pressure": "Blocked",
+        "source": "Monitoring report",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "thread_id": "sample-thread-003",
+        "label": "@sample_kol_3",
+        "kol_username": "@sample_kol_3",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "approval status mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "status": "awaiting_human_approval",
+        "status_label": "Awaiting Human Approval",
+        "lane": "red_hold_primeus_review",
+        "lane_label": "Red Hold Primeus Review",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T19:57:47+00:00",
+        "latest_inbound_message": "@sample_kol_3 requested a change that needs manual review before reply.",
+        "latest_inbound_request": "Pricing review",
+        "offer_summary": "Standard campaign package",
+        "blocker_summary": "Human review required",
+        "escalation_summary": "Pending human review for this sample approval case.",
+        "operator_note": "Keep this sample thread paused until a reviewer confirms the next move.",
+        "urgency": "normal",
+        "approval_pressure": "Blocked",
+        "source": "Monitoring report",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "thread_id": "sample-thread-004",
+        "label": "@sample_kol_4",
+        "kol_username": "@sample_kol_4",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "approval status mismatch",
+        "issue_label": "Approval Status Mismatch",
+        "status": "awaiting_human_approval",
+        "status_label": "Awaiting Human Approval",
+        "lane": "red_hold_primeus_review",
+        "lane_label": "Red Hold Primeus Review",
+        "priority": 85,
+        "priority_score": 85,
+        "recommended_action": "Review by hand before the next send",
+        "next_action_owner": "Manager",
+        "next_action_due_at": "2026-03-30T21:44:59+00:00",
+        "latest_inbound_message": "@sample_kol_4 requested a change that needs manual review before reply.",
+        "latest_inbound_request": "Pricing review",
+        "offer_summary": "Standard campaign package",
+        "blocker_summary": "Human review required",
+        "escalation_summary": "Pending human review for this sample approval case.",
+        "operator_note": "Keep this sample thread paused until a reviewer confirms the next move.",
+        "urgency": "normal",
+        "approval_pressure": "Blocked",
+        "source": "Monitoring report",
+        "manual_review": true,
+        "waiting_on_kol": false,
+        "green_lane": false
+      },
+      {
+        "thread_id": "sample-thread-005",
+        "label": "@sample_kol_5",
+        "kol_username": "@sample_kol_5",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-03-31T18:53:56+00:00",
+        "latest_inbound_message": "@sample_kol_5 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-006",
+        "label": "@sample_kol_6",
+        "kol_username": "@sample_kol_6",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "latest_inbound_message": "@sample_kol_6 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-007",
+        "label": "@sample_kol_7",
+        "kol_username": "@sample_kol_7",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "latest_inbound_message": "@sample_kol_7 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-008",
+        "label": "@sample_kol_8",
+        "kol_username": "@sample_kol_8",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "latest_inbound_message": "@sample_kol_8 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-009",
+        "label": "@sample_kol_9",
+        "kol_username": "@sample_kol_9",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "latest_inbound_message": "@sample_kol_9 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-010",
+        "label": "@sample_kol_10",
+        "kol_username": "@sample_kol_10",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:13+00:00",
+        "latest_inbound_message": "@sample_kol_10 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-011",
+        "label": "@sample_kol_11",
+        "kol_username": "@sample_kol_11",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_11 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-012",
+        "label": "@sample_kol_12",
+        "kol_username": "@sample_kol_12",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_12 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-013",
+        "label": "@sample_kol_13",
+        "kol_username": "@sample_kol_13",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_13 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-014",
+        "label": "@sample_kol_14",
+        "kol_username": "@sample_kol_14",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_14 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-015",
+        "label": "@sample_kol_15",
+        "kol_username": "@sample_kol_15",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_15 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-016",
+        "label": "@sample_kol_16",
+        "kol_username": "@sample_kol_16",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "awaiting_kol_decision",
+        "status_label": "Awaiting KOL Decision",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:00:14+00:00",
+        "latest_inbound_message": "@sample_kol_16 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-017",
+        "label": "@sample_kol_17",
+        "kol_username": "@sample_kol_17",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "waiting on kol",
+        "issue_label": "Waiting On KOL",
+        "status": "waiting_on_kol",
+        "status_label": "Waiting On KOL",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Wait for the KOL reply",
+        "next_action_owner": "KOL",
+        "next_action_due_at": "2026-04-01T06:54:30+00:00",
+        "latest_inbound_message": "@sample_kol_17 acknowledged the sample offer and is considering next steps.",
+        "latest_inbound_request": "Awaiting reply",
+        "offer_summary": "Follow-up package sent",
+        "blocker_summary": "Waiting on external reply",
+        "escalation_summary": "No escalation is active for this sample waiting case.",
+        "operator_note": "No action needed unless the due time passes without a reply.",
+        "urgency": "normal",
+        "approval_pressure": "Pending",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": true,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-018",
+        "label": "@sample_kol_18",
+        "kol_username": "@sample_kol_18",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:27+00:00",
+        "latest_inbound_message": "@sample_kol_18 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-019",
+        "label": "@sample_kol_19",
+        "kol_username": "@sample_kol_19",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:27+00:00",
+        "latest_inbound_message": "@sample_kol_19 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-020",
+        "label": "@sample_kol_20",
+        "kol_username": "@sample_kol_20",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:27+00:00",
+        "latest_inbound_message": "@sample_kol_20 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-021",
+        "label": "@sample_kol_21",
+        "kol_username": "@sample_kol_21",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:28+00:00",
+        "latest_inbound_message": "@sample_kol_21 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-022",
+        "label": "@sample_kol_22",
+        "kol_username": "@sample_kol_22",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:28+00:00",
+        "latest_inbound_message": "@sample_kol_22 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-023",
+        "label": "@sample_kol_23",
+        "kol_username": "@sample_kol_23",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:28+00:00",
+        "latest_inbound_message": "@sample_kol_23 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-024",
+        "label": "@sample_kol_24",
+        "kol_username": "@sample_kol_24",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:28+00:00",
+        "latest_inbound_message": "@sample_kol_24 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-025",
+        "label": "@sample_kol_25",
+        "kol_username": "@sample_kol_25",
+        "owner": "sora",
+        "owner_label": "Sora",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T10:35:28+00:00",
+        "latest_inbound_message": "@sample_kol_25 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-026",
+        "label": "@sample_kol_26",
+        "kol_username": "@sample_kol_26",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_26 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-027",
+        "label": "@sample_kol_27",
+        "kol_username": "@sample_kol_27",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_27 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-028",
+        "label": "@sample_kol_28",
+        "kol_username": "@sample_kol_28",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_28 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-029",
+        "label": "@sample_kol_29",
+        "kol_username": "@sample_kol_29",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_29 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-030",
+        "label": "@sample_kol_30",
+        "kol_username": "@sample_kol_30",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_30 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-031",
+        "label": "@sample_kol_31",
+        "kol_username": "@sample_kol_31",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_31 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-032",
+        "label": "@sample_kol_32",
+        "kol_username": "@sample_kol_32",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_32 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-033",
+        "label": "@sample_kol_33",
+        "kol_username": "@sample_kol_33",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_33 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-034",
+        "label": "@sample_kol_34",
+        "kol_username": "@sample_kol_34",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_34 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      },
+      {
+        "thread_id": "sample-thread-035",
+        "label": "@sample_kol_35",
+        "kol_username": "@sample_kol_35",
+        "owner": "john",
+        "owner_label": "John",
+        "issue": "review sample",
+        "issue_label": "Review Sample",
+        "status": "outreach_sent",
+        "status_label": "Outreach Sent",
+        "lane": "green_auto_send",
+        "lane_label": "Green Auto Send",
+        "priority": 10,
+        "priority_score": 10,
+        "recommended_action": "Continue with the current lane",
+        "next_action_owner": "Worker",
+        "next_action_due_at": "2026-04-01T11:12:08+00:00",
+        "latest_inbound_message": "@sample_kol_35 is in a low-risk sample lane and can continue automatically.",
+        "latest_inbound_request": "Standard follow-up",
+        "offer_summary": "Auto-continue package",
+        "blocker_summary": "No blocker",
+        "escalation_summary": "No escalation is active.",
+        "operator_note": "Safe to continue unless a new blocker appears.",
+        "urgency": "normal",
+        "approval_pressure": "Active",
+        "source": "Monitoring report",
+        "manual_review": false,
+        "waiting_on_kol": false,
+        "green_lane": true
+      }
+    ],
+    "summary_rows": [
+      {
+        "label": "Threads",
+        "value": "36"
+      },
+      {
+        "label": "Pending approvals",
+        "value": "4"
+      },
+      {
+        "label": "Escalations",
+        "value": "1"
+      },
+      {
+        "label": "Negotiating",
+        "value": "12"
+      }
+    ],
+    "file_rows": [
+      {
+        "label": "Daily",
+        "value": "2 json \u00b7 5 html",
+        "latest_json": "latest.json",
+        "latest_html": "latest.html"
+      },
+      {
+        "label": "Monitoring",
+        "value": "12 json \u00b7 15 html",
+        "latest_json": "latest.json",
+        "latest_html": "latest.html"
+      },
+      {
+        "label": "Shadow review",
+        "value": "6 json \u00b7 6 html",
+        "latest_json": "latest.json",
+        "latest_html": "latest.html"
+      }
+    ],
+    "breakdown_rows": [
+      {
+        "group": "Thread state",
+        "label": "outreach sent",
+        "value": "18"
+      },
+      {
+        "group": "Thread state",
+        "label": "awaiting kol decision",
+        "value": "12"
+      },
+      {
+        "group": "Thread state",
+        "label": "awaiting human approval",
+        "value": "4"
+      },
+      {
+        "group": "Thread state",
+        "label": "closed lost",
+        "value": "1"
+      },
+      {
+        "group": "Thread state",
+        "label": "waiting on kol",
+        "value": "1"
+      },
+      {
+        "group": "Escalation",
+        "label": "pending human",
+        "value": "1"
+      },
+      {
+        "group": "Escalation",
+        "label": "approved",
+        "value": "1"
+      },
+      {
+        "group": "Send attempt",
+        "label": "shadow logged",
+        "value": "11021"
+      },
+      {
+        "group": "Send attempt",
+        "label": "sent",
+        "value": "61"
+      },
+      {
+        "group": "Send attempt",
+        "label": "failed",
+        "value": "1"
+      }
+    ]
+  },
+  "integrations": {
+    "items": [
+      {
+        "label": "OpenClaw",
+        "status": "active",
+        "summary": "Workspace /home/operator/.openclaw/workspace on model openai-codex/gpt-5.4. Tools profile coding.",
+        "metrics": [
+          {
+            "label": "Workspace",
+            "value": "/home/operator/.openclaw/workspace"
+          },
+          {
+            "label": "Primary model",
+            "value": "openai-codex/gpt-5.4"
+          },
+          {
+            "label": "Tools",
+            "value": "coding"
+          }
+        ]
+      },
+      {
+        "label": "Telegram",
+        "status": "active",
+        "summary": "Telegram is enabled. DM policy pairing and group policy allowlist.",
+        "metrics": [
+          {
+            "label": "DM policy",
+            "value": "pairing"
+          },
+          {
+            "label": "Groups",
+            "value": "allowlist"
+          },
+          {
+            "label": "Streaming",
+            "value": "partial"
+          }
+        ]
+      },
+      {
+        "label": "Codex lane",
+        "status": "ready",
+        "summary": "CLI login is ready. coding-agent skill is ready.",
+        "metrics": [
+          {
+            "label": "CLI login",
+            "value": "ready"
+          },
+          {
+            "label": "Skill",
+            "value": "ready"
+          },
+          {
+            "label": "Route",
+            "value": "bash-first"
+          }
+        ]
+      },
+      {
+        "label": "Gateway",
+        "status": "active",
+        "summary": "Gateway listens on loopback:18789 with auth mode token.",
+        "metrics": [
+          {
+            "label": "Mode",
+            "value": "local"
+          },
+          {
+            "label": "Bind",
+            "value": "loopback"
+          },
+          {
+            "label": "Port",
+            "value": "18789"
+          }
+        ]
+      },
+      {
+        "label": "Web search",
+        "status": "active",
+        "summary": "Web search is enabled with provider brave.",
+        "metrics": [
+          {
+            "label": "Provider",
+            "value": "brave"
+          },
+          {
+            "label": "Enabled",
+            "value": "yes"
+          },
+          {
+            "label": "Auth mode",
+            "value": "token"
+          }
+        ]
+      }
+    ],
+    "summary_rows": [
+      {
+        "label": "Provider",
+        "value": "openai-codex"
+      },
+      {
+        "label": "Login mode",
+        "value": "oauth"
+      },
+      {
+        "label": "Telegram DM",
+        "value": "pairing"
+      },
+      {
+        "label": "Search",
+        "value": "brave"
+      }
+    ],
+    "security_rows": [
+      {
+        "label": "Gateway auth",
+        "value": "token"
+      },
+      {
+        "label": "OAuth email",
+        "value": "operator@example.com"
+      },
+      {
+        "label": "Channel exposure",
+        "value": "loopback:18789"
+      },
+      {
+        "label": "Secrets",
+        "value": "3 configured \u00b7 0 not set"
+      }
+    ],
+    "editor": {
+      "fields": {
+        "primary_model": "openai-codex/gpt-5.4",
+        "search_provider": "brave",
+        "dm_policy": "pairing",
+        "group_policy": "allowlist",
+        "gateway_port": "18789"
+      },
+      "presence": {
+        "gateway_token": true,
+        "telegram_bot_token": true,
+        "brave_api_key": true
+      },
+      "oauth": {
+        "provider": "openai-codex",
+        "mode": "oauth",
+        "email": "operator@example.com"
+      },
+      "base_hash": "a1ff0f5ae1ce2a915071f09b42819060fa08ce500f10aa3a3fe65f075a0aedfd"
+    }
+  },
+  "skills": {
+    "summary": {
+      "total": 63,
+      "ready": 23,
+      "needs_setup": 40,
+      "blocked": 0
+    },
+    "items": [
+      {
+        "name": "1password",
+        "label": "\ud83d\udd10 1password",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.",
+        "homepage": "https://developer.1password.com/docs/cli/get-started/",
+        "primary_env": "",
+        "missing_summary": "bins: op"
+      },
+      {
+        "name": "apple-notes",
+        "label": "\ud83d\udcdd apple-notes",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Manage Apple Notes via the `memo` CLI on macOS (create, view, edit, delete, search, move, and export notes). Use when a user asks OpenClaw to add a note, list notes, search notes, or manage note folders.",
+        "homepage": "https://github.com/antoniorodr/memo",
+        "primary_env": "",
+        "missing_summary": "bins: memo; os: darwin"
+      },
+      {
+        "name": "apple-reminders",
+        "label": "\u23f0 apple-reminders",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Manage Apple Reminders via remindctl CLI (list, add, edit, complete, delete). Supports lists, date filters, and JSON/plain output.",
+        "homepage": "https://github.com/steipete/remindctl",
+        "primary_env": "",
+        "missing_summary": "bins: remindctl; os: darwin"
+      },
+      {
+        "name": "bear-notes",
+        "label": "\ud83d\udc3b bear-notes",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Create, search, and manage Bear notes via grizzly CLI.",
+        "homepage": "https://bear.app",
+        "primary_env": "",
+        "missing_summary": "bins: grizzly; os: darwin"
+      },
+      {
+        "name": "blogwatcher",
+        "label": "\ud83d\udcf0 blogwatcher",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Monitor blogs and RSS/Atom feeds for updates using the blogwatcher CLI.",
+        "homepage": "https://github.com/Hyaxia/blogwatcher",
+        "primary_env": "",
+        "missing_summary": "bins: blogwatcher"
+      },
+      {
+        "name": "blucli",
+        "label": "\ud83e\uded0 blucli",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "BluOS CLI (blu) for discovery, playback, grouping, and volume.",
+        "homepage": "https://blucli.sh",
+        "primary_env": "",
+        "missing_summary": "bins: blu"
+      },
+      {
+        "name": "bluebubbles",
+        "label": "\ud83e\udee7 bluebubbles",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Use when you need to send or manage iMessages via BlueBubbles (recommended iMessage integration). Calls go through the generic message tool with channel=\"bluebubbles\".",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "config: channels.bluebubbles"
+      },
+      {
+        "name": "camsnap",
+        "label": "\ud83d\udcf8 camsnap",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Capture frames or clips from RTSP/ONVIF cameras.",
+        "homepage": "https://camsnap.ai",
+        "primary_env": "",
+        "missing_summary": "bins: camsnap"
+      },
+      {
+        "name": "clawhub",
+        "label": "clawhub",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Use the ClawHub CLI to search, install, update, and publish agent skills from clawhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawhub CLI.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "bins: clawhub"
+      },
+      {
+        "name": "coding-agent",
+        "label": "\ud83e\udde9 coding-agent",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Delegate coding tasks to Codex, Claude Code, or Pi agents via background process. Use when: (1) building/creating new features or apps, (2) reviewing PRs (spawn in temp dir), (3) refactoring large codebases, (4) iterative coding that needs file exploration. NOT for: simple one-liner fixes (just edit), reading code (use read tool), thread-bound ACP harness requests in chat (for example spawn/run Codex or Claude Code in a Discord thread; use sessions_spawn with runtime:\"acp\"), or any work in ~/clawd workspace (never spawn agents here). Claude Code: use --print --permission-mode bypassPermissions (no PTY). Codex/Pi/OpenCode: pty:true required.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "discord",
+        "label": "\ud83c\udfae discord",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Discord ops via the message tool (channel=discord).",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "config: channels.discord.token"
+      },
+      {
+        "name": "eightctl",
+        "label": "\ud83d\udecc eightctl",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Control Eight Sleep pods (status, temperature, alarms, schedules).",
+        "homepage": "https://eightctl.sh",
+        "primary_env": "",
+        "missing_summary": "bins: eightctl"
+      },
+      {
+        "name": "gemini",
+        "label": "\u2728 gemini",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Gemini CLI for one-shot Q&A, summaries, and generation.",
+        "homepage": "https://ai.google.dev/",
+        "primary_env": "",
+        "missing_summary": "bins: gemini"
+      },
+      {
+        "name": "gh-issues",
+        "label": "gh-issues",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Fetch GitHub issues, spawn sub-agents to implement fixes and open PRs, then monitor and address PR review comments. Usage: /gh-issues [owner/repo] [--label bug] [--limit 5] [--milestone v1.0] [--assignee @me] [--fork user/repo] [--watch] [--interval 5] [--reviews-only] [--cron] [--dry-run] [--model glm-5] [--notify-channel -1002381931352]",
+        "homepage": "",
+        "primary_env": "GH_TOKEN",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "gifgrep",
+        "label": "\ud83e\uddf2 gifgrep",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Search GIF providers with CLI/TUI, download results, and extract stills/sheets.",
+        "homepage": "https://gifgrep.com",
+        "primary_env": "",
+        "missing_summary": "bins: gifgrep"
+      },
+      {
+        "name": "github",
+        "label": "\ud83d\udc19 github",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "GitHub operations via `gh` CLI: issues, PRs, CI runs, code review, API queries. Use when: (1) checking PR status or CI, (2) creating/commenting on issues, (3) listing/filtering PRs or issues, (4) viewing run logs. NOT for: complex web UI interactions requiring manual browser flows (use browser tooling when available), bulk operations across many repos (script with gh api), or when gh auth is not configured.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "gog",
+        "label": "\ud83c\udfae gog",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.",
+        "homepage": "https://gogcli.sh",
+        "primary_env": "",
+        "missing_summary": "bins: gog"
+      },
+      {
+        "name": "goplaces",
+        "label": "\ud83d\udccd goplaces",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Query Google Places API (New) via the goplaces CLI for text search, place details, resolve, and reviews. Use for human-friendly place lookup or JSON output for scripts.",
+        "homepage": "https://github.com/steipete/goplaces",
+        "primary_env": "GOOGLE_PLACES_API_KEY",
+        "missing_summary": "bins: goplaces; env: GOOGLE_PLACES_API_KEY"
+      },
+      {
+        "name": "healthcheck",
+        "label": "healthcheck",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Host security hardening and risk-tolerance configuration for OpenClaw deployments. Use when a user asks for security audits, firewall/SSH/update hardening, risk posture, exposure review, OpenClaw cron scheduling for periodic checks, or version status checks on a machine running OpenClaw (laptop, workstation, Pi, VPS).",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "himalaya",
+        "label": "\ud83d\udce7 himalaya",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).",
+        "homepage": "https://github.com/pimalaya/himalaya",
+        "primary_env": "",
+        "missing_summary": "bins: himalaya"
+      },
+      {
+        "name": "imsg",
+        "label": "\ud83d\udce8 imsg",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "iMessage/SMS CLI for listing chats, history, and sending messages via Messages.app.",
+        "homepage": "https://imsg.to",
+        "primary_env": "",
+        "missing_summary": "bins: imsg; os: darwin"
+      },
+      {
+        "name": "mcporter",
+        "label": "\ud83d\udce6 mcporter",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type generation.",
+        "homepage": "http://mcporter.dev",
+        "primary_env": "",
+        "missing_summary": "bins: mcporter"
+      },
+      {
+        "name": "model-usage",
+        "label": "\ud83d\udcca model-usage",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Use CodexBar CLI local cost usage to summarize per-model usage for Codex or Claude, including the current (most recent) model or a full model breakdown. Trigger when asked for model-level usage/cost data from codexbar, or when you need a scriptable per-model summary from codexbar cost JSON.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "bins: codexbar; os: darwin"
+      },
+      {
+        "name": "nano-pdf",
+        "label": "\ud83d\udcc4 nano-pdf",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Edit PDFs with natural-language instructions using the nano-pdf CLI.",
+        "homepage": "https://pypi.org/project/nano-pdf/",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "node-connect",
+        "label": "node-connect",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Diagnose OpenClaw node connection and pairing failures for Android, iOS, and macOS companion apps. Use when QR/setup code/manual connect fails, local Wi-Fi works but VPS/tailnet does not, or errors mention pairing required, unauthorized, bootstrap token invalid or expired, gateway.bind, gateway.remote.url, Tailscale, or plugins.entries.device-pair.config.publicUrl.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "notion",
+        "label": "\ud83d\udcdd notion",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Notion API for creating and managing pages, databases, and blocks.",
+        "homepage": "https://developers.notion.com",
+        "primary_env": "NOTION_API_KEY",
+        "missing_summary": "env: NOTION_API_KEY"
+      },
+      {
+        "name": "obsidian",
+        "label": "\ud83d\udc8e obsidian",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Work with Obsidian vaults (plain Markdown notes) and automate via obsidian-cli.",
+        "homepage": "https://help.obsidian.md",
+        "primary_env": "",
+        "missing_summary": "bins: obsidian-cli"
+      },
+      {
+        "name": "openai-whisper",
+        "label": "\ud83c\udfa4 openai-whisper",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Local speech-to-text with the Whisper CLI (no API key).",
+        "homepage": "https://openai.com/research/whisper",
+        "primary_env": "",
+        "missing_summary": "bins: whisper"
+      },
+      {
+        "name": "openai-whisper-api",
+        "label": "\ud83c\udf10 openai-whisper-api",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Transcribe audio via OpenAI Audio Transcriptions API (Whisper).",
+        "homepage": "https://platform.openai.com/docs/guides/speech-to-text",
+        "primary_env": "OPENAI_API_KEY",
+        "missing_summary": "env: OPENAI_API_KEY"
+      },
+      {
+        "name": "openhue",
+        "label": "\ud83d\udca1 openhue",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Control Philips Hue lights and scenes via the OpenHue CLI.",
+        "homepage": "https://www.openhue.io/cli",
+        "primary_env": "",
+        "missing_summary": "bins: openhue"
+      },
+      {
+        "name": "oracle",
+        "label": "\ud83e\uddff oracle",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Best practices for using the oracle CLI (prompt + file bundling, engines, sessions, and file attachment patterns).",
+        "homepage": "https://askoracle.dev",
+        "primary_env": "",
+        "missing_summary": "bins: oracle"
+      },
+      {
+        "name": "ordercli",
+        "label": "\ud83d\udef5 ordercli",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Foodora-only CLI for checking past orders and active order status (Deliveroo WIP).",
+        "homepage": "https://ordercli.sh",
+        "primary_env": "",
+        "missing_summary": "bins: ordercli"
+      },
+      {
+        "name": "peekaboo",
+        "label": "\ud83d\udc40 peekaboo",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Capture and automate macOS UI with the Peekaboo CLI.",
+        "homepage": "https://peekaboo.boo",
+        "primary_env": "",
+        "missing_summary": "bins: peekaboo; os: darwin"
+      },
+      {
+        "name": "sag",
+        "label": "\ud83d\udd0a sag",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "ElevenLabs text-to-speech with mac-style say UX.",
+        "homepage": "https://sag.sh",
+        "primary_env": "ELEVENLABS_API_KEY",
+        "missing_summary": "bins: sag; env: ELEVENLABS_API_KEY"
+      },
+      {
+        "name": "session-logs",
+        "label": "\ud83d\udcdc session-logs",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Search and analyze your own session logs (older/parent conversations) using jq.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "sherpa-onnx-tts",
+        "label": "\ud83d\udd09 sherpa-onnx-tts",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Local text-to-speech via sherpa-onnx (offline, no cloud)",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "env: SHERPA_ONNX_RUNTIME_DIR, SHERPA_ONNX_MODEL_DIR"
+      },
+      {
+        "name": "skill-creator",
+        "label": "skill-creator",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Create, edit, improve, or audit AgentSkills. Use when creating a new skill from scratch or when asked to improve, review, audit, tidy up, or clean up an existing skill or SKILL.md file. Also use when editing or restructuring a skill directory (moving files to references/ or scripts/, removing stale content, validating against the AgentSkills spec). Triggers on phrases like \"create a skill\", \"author a skill\", \"tidy up a skill\", \"improve this skill\", \"review the skill\", \"clean up the skill\", \"audit the skill\".",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "slack",
+        "label": "\ud83d\udcac slack",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Use when you need to control Slack from OpenClaw via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "config: channels.slack"
+      },
+      {
+        "name": "songsee",
+        "label": "\ud83c\udf0a songsee",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Generate spectrograms and feature-panel visualizations from audio with the songsee CLI.",
+        "homepage": "https://github.com/steipete/songsee",
+        "primary_env": "",
+        "missing_summary": "bins: songsee"
+      },
+      {
+        "name": "sonoscli",
+        "label": "\ud83d\udd0a sonoscli",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Control Sonos speakers (discover/status/play/volume/group).",
+        "homepage": "https://sonoscli.sh",
+        "primary_env": "",
+        "missing_summary": "bins: sonos"
+      },
+      {
+        "name": "spotify-player",
+        "label": "\ud83c\udfb5 spotify-player",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Terminal Spotify playback/search via spogo (preferred) or spotify_player.",
+        "homepage": "https://www.spotify.com",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "summarize",
+        "label": "\ud83e\uddfe summarize",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Summarize or extract text/transcripts from URLs, podcasts, and local files (great fallback for \u201ctranscribe this YouTube/video\u201d).",
+        "homepage": "https://summarize.sh",
+        "primary_env": "",
+        "missing_summary": "bins: summarize"
+      },
+      {
+        "name": "things-mac",
+        "label": "\u2705 things-mac",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Manage Things 3 via the `things` CLI on macOS (add/update projects+todos via URL scheme; read/search/list from the local Things database). Use when a user asks OpenClaw to add a task to Things, list inbox/today/upcoming, search tasks, or inspect projects/areas/tags.",
+        "homepage": "https://github.com/ossianhempel/things3-cli",
+        "primary_env": "",
+        "missing_summary": "bins: things; os: darwin"
+      },
+      {
+        "name": "tmux",
+        "label": "\ud83e\uddf5 tmux",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "trello",
+        "label": "\ud83d\udccb trello",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Manage Trello boards, lists, and cards via the Trello REST API.",
+        "homepage": "https://developer.atlassian.com/cloud/trello/rest/",
+        "primary_env": "",
+        "missing_summary": "env: TRELLO_API_KEY, TRELLO_TOKEN"
+      },
+      {
+        "name": "video-frames",
+        "label": "\ud83c\udfac video-frames",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Extract frames or short clips from videos using ffmpeg.",
+        "homepage": "https://ffmpeg.org",
+        "primary_env": "",
+        "missing_summary": "bins: ffmpeg"
+      },
+      {
+        "name": "voice-call",
+        "label": "\ud83d\udcde voice-call",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Start voice calls via the OpenClaw voice-call plugin.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "config: plugins.entries.voice-call.enabled"
+      },
+      {
+        "name": "wacli",
+        "label": "\ud83d\udcf1 wacli",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats).",
+        "homepage": "https://wacli.sh",
+        "primary_env": "",
+        "missing_summary": "bins: wacli"
+      },
+      {
+        "name": "weather",
+        "label": "\u2614 weather",
+        "status": "ready",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather, temperature, or forecasts for any location. NOT for: historical weather data, severe weather alerts, or detailed meteorological analysis. No API key needed.",
+        "homepage": "https://wttr.in/:help",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "xurl",
+        "label": "\ud83d\udc26 xurl",
+        "status": "needs setup",
+        "source": "openclaw-bundled",
+        "bundled": true,
+        "description": "A CLI tool for making authenticated requests to the X (Twitter) API. Use this skill when you need to post tweets, reply, quote, search, read posts, manage followers, send DMs, upload media, or interact with any X API v2 endpoint.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "bins: xurl"
+      },
+      {
+        "name": "agent-architecture-evaluator",
+        "label": "agent-architecture-evaluator",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Use when evaluating, testing, and optimizing an agent architecture or multi-agent system. Best for reviewing planning, routing, memory, tool use, reliability, observability, cost, and system-level failure modes.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "agent-designer",
+        "label": "agent-designer",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Agent Designer - Multi-Agent System Architecture",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "Agents",
+        "label": "Agents",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Design, build, and deploy AI agents with architecture patterns, framework selection, memory systems, and production safety.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "architecture-designer",
+        "label": "architecture-designer",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Use when designing new system architecture, reviewing existing designs, or making architectural decisions. Invoke for system design, architecture review, design patterns, ADRs, scalability planning.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "delegation",
+        "label": "delegation",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Architecture-first workflow for delegating complex projects to AI coding agents. Ensures code fits the system before it's written.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "describe-design",
+        "label": "describe-design",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Research a codebase and create architectural documentation describing how features or systems work. Use when the user asks to: (1) Document how a feature works, (2) Create an architecture overview, (3) Explain code structure for onboarding or knowledge transfer, (4) Research and describe a system's design. Produces markdown documents with Mermaid diagrams and stable code references suitable for humans and AI agents.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "Product Manager",
+        "label": "Product Manager",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Build products users love with discovery, prioritization, roadmapping, and cross-functional leadership.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "Self-Improving + Proactive Agent",
+        "label": "Self-Improving + Proactive Agent",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Self-reflection + Self-criticism + Self-learning + Self-organizing memory. Agent evaluates its own work, catches mistakes, and improves permanently. Use when (1) a command, tool, API, or operation fails; (2) the user corrects you or rejects your work; (3) you realize your knowledge is outdated or incorrect; (4) you discover a better approach; (5) the user explicitly installs or references the skill for the current task.",
+        "homepage": "https://clawic.com/skills/self-improving",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "Software Architect",
+        "label": "Software Architect",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Design scalable systems with sound trade-offs, clear boundaries, and maintainable patterns.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "tactical-negotiation",
+        "label": "tactical-negotiation",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "tactical negotiation playbook for client, sales, vendor, procurement, salary, internal stakeholder, creator, kol, koc, influencer, community, ambassador, affiliate, and partnership negotiations. use when preparing for a negotiation, handling price pushback, protecting margin, structuring cash versus upside, trading concessions, drafting a dm or email, coaching a live call, mapping leverage, reviewing risky terms, handling creator objections, or deciding whether to walk away. combines tactical empathy methods inspired by chris voss with practical deal design, batna, scope control, hard-mode diagnostics, contract-risk checks, and creator deal structures.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "telegram-rich-messages",
+        "label": "telegram-rich-messages",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Comprehensive guide for Telegram Rich UI features (Inline buttons, formatting, media, reactions, and message management). Use this skill to provide a low-friction, interactive experience for Telegram users, prioritizing buttons over typing.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "tg",
+        "label": "tg",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Telegram CLI for reading, searching, and sending messages. Use when the user asks about Telegram messages, wants to check inbox, search chats, send messages, or look up contacts and groups.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      },
+      {
+        "name": "think-cog",
+        "label": "\ud83d\udcad think-cog",
+        "status": "ready",
+        "source": "openclaw-workspace",
+        "bundled": false,
+        "description": "Complex ideas need iteration, not conversation. Think \u2192 Do \u2192 Review \u2192 Repeat. CellCog completes the full loop \u2014 brainstorming, reasoning, problem-solving, strategic thinking, then executing across every modality: research, documents, visuals, data, prototypes. Like having an Alfred who doesn't just advise \u2014 he builds.",
+        "homepage": "",
+        "primary_env": "",
+        "missing_summary": "No missing requirements."
+      }
+    ],
+    "summary_rows": [
+      {
+        "label": "Ready",
+        "value": "23"
+      },
+      {
+        "label": "Needs setup",
+        "value": "40"
+      },
+      {
+        "label": "Blocked or disabled",
+        "value": "0"
+      },
+      {
+        "label": "Workspace skills",
+        "value": "13"
+      },
+      {
+        "label": "Bundled skills",
+        "value": "50"
+      }
+    ],
+    "install_rows": [
+      {
+        "label": "Install command",
+        "value": "openclaw skills install <slug>"
+      },
+      {
+        "label": "Workspace",
+        "value": "/home/operator/.openclaw/workspace"
+      },
+      {
+        "label": "Managed dir",
+        "value": "/home/operator/.openclaw/skills"
+      },
+      {
+        "label": "Install flow",
+        "value": "This surface installs by slug, then refreshes the latest snapshot."
+      }
+    ]
+  },
+  "identity": {
+    "items": [
+      {
+        "label": "Primeus identity",
+        "summary": "Primeus acts as the operator-facing orchestration layer in this sample workspace.",
+        "highlights": [
+          "Coordinates approvals, routing, and operator-facing summaries."
+        ]
+      },
+      {
+        "label": "Operator profile",
+        "summary": "The sample operator prefers concise status and explicit next actions.",
+        "highlights": [
+          "Escalate only for approvals, pricing changes, or risky external actions."
+        ]
+      },
+      {
+        "label": "Soul",
+        "summary": "Private data stays private and external actions require care.",
+        "highlights": [
+          "Be useful without being noisy.",
+          "Protect sensitive information."
+        ]
+      },
+      {
+        "label": "Operating memory",
+        "summary": "The sample runtime uses one orchestrator, one builder, and worker lanes.",
+        "highlights": [
+          "Keep the dashboard decision-first.",
+          "Use approvals for risky changes."
+        ]
+      }
+    ],
+    "doc_rows": [
+      {
+        "label": "SOUL.md",
+        "value": "Voice and boundaries"
+      },
+      {
+        "label": "IDENTITY.md",
+        "value": "Role and stance"
+      },
+      {
+        "label": "USER.md",
+        "value": "Operator profile"
+      },
+      {
+        "label": "MEMORY.md",
+        "value": "Operating model"
+      },
+      {
+        "label": "AGENTS.md",
+        "value": "Agent startup rules"
+      }
+    ],
+    "rules": [
+      "Be direct, practical, and warm.",
+      "Avoid exposing private data in shared surfaces.",
+      "Escalate risky business changes for human review."
+    ],
+    "editors": [
+      {
+        "name": "SOUL.md",
+        "label": "Soul",
+        "summary": "Sample document for the public-safe demo.",
+        "path": "/home/operator/.openclaw/workspace/SOUL.md",
+        "content": "# SOUL.md\n\n- Be helpful and direct.\n- Protect private data.\n- Escalate risky external actions.\n",
+        "base_hash": "c3d660c54c39004440bded85ca3e44949fa80d547f486dfd6a85047c8afbc7ed"
+      },
+      {
+        "name": "IDENTITY.md",
+        "label": "Identity",
+        "summary": "Sample document for the public-safe demo.",
+        "path": "/home/operator/.openclaw/workspace/IDENTITY.md",
+        "content": "# IDENTITY.md\n\n- Name: Primeus\n- Role: operator-facing control layer\n- Style: practical, concise, and warm\n",
+        "base_hash": "eb14c1564b0fb1ac00578b870bc2f4f63654f3693ddf17cfcb083bcbc126fe2e"
+      },
+      {
+        "name": "USER.md",
+        "label": "User",
+        "summary": "Sample document for the public-safe demo.",
+        "path": "/home/operator/.openclaw/workspace/USER.md",
+        "content": "# USER.md\n\n- Operator profile: prefers actionable summaries\n- Approvals: human review for risky outbound or pricing changes\n",
+        "base_hash": "f9d2aa2edfa82cb2a2768fe2ea3ec9bbf8d9496208aef0794a20111ae920fdc9"
+      },
+      {
+        "name": "MEMORY.md",
+        "label": "Memory",
+        "summary": "Sample document for the public-safe demo.",
+        "path": "/home/operator/.openclaw/workspace/MEMORY.md",
+        "content": "# MEMORY.md\n\n- Shared runtime uses one manager lane and multiple worker lanes.\n- Keep the UI decision-first and readable.\n",
+        "base_hash": "447477b4c84ead820f31a671b9804607fc73bd8ca468164f5ceaca8686bff550"
+      },
+      {
+        "name": "AGENTS.md",
+        "label": "Agents",
+        "summary": "Sample document for the public-safe demo.",
+        "path": "/home/operator/.openclaw/workspace/AGENTS.md",
+        "content": "# AGENTS.md\n\n- Primeus orchestrates.\n- Codex builds and verifies.\n- Worker agents execute in scoped lanes.\n",
+        "base_hash": "52338be6bb17444dd47626098fe5ebf28e58a62639211d28c46f0481f148a65b"
+      }
+    ]
+  },
+  "audit": {
+    "room_events": [
+      {
+        "ts": "2026-04-01T08:45:00+07:00",
+        "from": "primeus",
+        "to": "codex",
+        "type": "decision",
+        "topic": "sample-approval-review",
+        "status": "open",
+        "text": "Sample control-room handoff was opened for the public demo workflow."
+      },
+      {
+        "ts": "2026-04-01T08:50:00+07:00",
+        "from": "codex",
+        "to": "primeus",
+        "type": "update",
+        "topic": "sample-approval-review",
+        "status": "done",
+        "text": "Sample monitoring board and thread details were refreshed from the demo snapshot."
+      },
+      {
+        "ts": "2026-04-01T09:05:00+07:00",
+        "from": "primeus",
+        "to": "codex",
+        "type": "task",
+        "topic": "sample-approval-review",
+        "status": "open",
+        "text": "Review manual approvals and summarize which threads can continue automatically."
+      }
+    ],
+    "runtime_events": [
+      {
+        "event_type": "lock_acquired",
+        "actor_type": "worker",
+        "actor_id": "john",
+        "thread_id": "sample-thread-001",
+        "created_at": "2026-04-01T02:05:00+00:00"
+      },
+      {
+        "event_type": "state_transition",
+        "actor_type": "worker",
+        "actor_id": "john",
+        "thread_id": "sample-thread-001",
+        "created_at": "2026-04-01T02:06:00+00:00"
+      },
+      {
+        "event_type": "approval_requested",
+        "actor_type": "worker",
+        "actor_id": "sora",
+        "thread_id": "sample-thread-002",
+        "created_at": "2026-04-01T02:10:00+00:00"
+      }
+    ],
+    "summary_rows": [
+      {
+        "label": "Room events",
+        "value": "3"
+      },
+      {
+        "label": "Thread states",
+        "value": "18 active, 12 waiting, 4 approval review"
+      },
+      {
+        "label": "Escalations",
+        "value": "1 pending human, 1 resolved"
+      },
+      {
+        "label": "Send attempts",
+        "value": "120 shadow logged, 14 sent, 1 failed"
+      }
+    ],
+    "doc_rows": [
+      {
+        "label": "BUILD_STATUS.md",
+        "value": "- Sample dashboard boots from a sanitized snapshot by default."
+      },
+      {
+        "label": "BUILD_STATUS.md",
+        "value": "- Live sync is opt-in through environment variables."
+      },
+      {
+        "label": "CODEX_HANDOFF.md",
+        "value": "- Reports uses a board view plus a record-style detail page."
+      }
+    ]
+  },
+  "room_events": [
+    {
+      "ts": "2026-04-01T08:45:00+07:00",
+      "from": "primeus",
+      "to": "codex",
+      "type": "decision",
+      "topic": "sample-approval-review",
+      "status": "open",
+      "text": "Sample control-room handoff was opened for the public demo workflow."
+    },
+    {
+      "ts": "2026-04-01T08:50:00+07:00",
+      "from": "codex",
+      "to": "primeus",
+      "type": "update",
+      "topic": "sample-approval-review",
+      "status": "done",
+      "text": "Sample monitoring board and thread details were refreshed from the demo snapshot."
+    },
+    {
+      "ts": "2026-04-01T09:05:00+07:00",
+      "from": "primeus",
+      "to": "codex",
+      "type": "task",
+      "topic": "sample-approval-review",
+      "status": "open",
+      "text": "Review manual approvals and summarize which threads can continue automatically."
+    }
+  ],
+  "docs": {
+    "build_status_summary": "Public-safe demo snapshot loaded with sanitized workflow data.",
+    "codex_handoff_summary": "Use this repo as a local control surface demo or point it at your own runtime."
+  }
+}

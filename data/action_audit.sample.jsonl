@@ -1,0 +1,2 @@
+{"ts": "2026-04-01T09:26:54+07:00", "action": "refresh", "target": "sample-dashboard", "outcome": "success", "message": "Loaded the sanitized sample snapshot."}
+{"ts": "2026-04-01T09:30:54+07:00", "action": "reports.inspect", "target": "sample-thread-001", "outcome": "success", "message": "Opened a sample thread record from the Reports board."}
