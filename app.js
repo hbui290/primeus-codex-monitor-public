@@ -49,9 +49,12 @@ const agentTableBody = document.querySelector("#agent-table-body");
 const agentFilterInput = document.querySelector("#agent-filter-input");
 const agentSummaryGrid = document.querySelector("#agent-summary-grid");
 const agentAttentionList = document.querySelector("#agent-attention-list");
+const agentAttentionSummary = document.querySelector("#agent-attention-summary");
 const agentEditorTitle = document.querySelector("#agent-editor-title");
 const agentEditorSummary = document.querySelector("#agent-editor-summary");
+const agentOverviewBadges = document.querySelector("#agent-overview-badges");
 const agentLiveFacts = document.querySelector("#agent-live-facts");
+const agentContextList = document.querySelector("#agent-context-list");
 const agentLinkedFiles = document.querySelector("#agent-linked-files");
 const agentForm = document.querySelector("#agent-form");
 const agentDisplayName = document.querySelector("#agent-display-name");
@@ -81,8 +84,6 @@ const reportWatchlistSortSelect = document.querySelector("#report-watchlist-sort
 const reportWatchlistColumns = document.querySelector("#report-watchlist-columns");
 const reportsActionSummary = document.querySelector("#reports-action-summary");
 const reportsActionList = document.querySelector("#reports-action-list");
-const reportsStateSummary = document.querySelector("#reports-state-summary");
-const reportsStateList = document.querySelector("#reports-state-list");
 const reportsThreadSummary = document.querySelector("#reports-thread-summary");
 const reportsThreadFacts = document.querySelector("#reports-thread-facts");
 const reportsThreadActions = document.querySelector("#reports-thread-actions");
@@ -238,14 +239,6 @@ reportsActionList.addEventListener("click", (event) => {
   const modeButton = event.target.closest("[data-watchlist-mode-set]");
   if (!modeButton) return;
   reportWatchlistMode = modeButton.dataset.watchlistModeSet || "all";
-  currentReportsView = "board";
-  renderReportsPane(currentSnapshot);
-});
-
-reportsStateList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-watchlist-mode-set]");
-  if (!button) return;
-  reportWatchlistMode = button.dataset.watchlistModeSet || "all";
   currentReportsView = "board";
   renderReportsPane(currentSnapshot);
 });
@@ -456,6 +449,13 @@ skillsInstallForm.addEventListener("submit", async (event) => {
 });
 
 agentTableBody.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-select-agent]");
+  if (!button) return;
+  currentAgentId = button.dataset.selectAgent || currentAgentId;
+  renderAgentsPane(currentSnapshot);
+});
+
+agentAttentionList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-select-agent]");
   if (!button) return;
   currentAgentId = button.dataset.selectAgent || currentAgentId;
@@ -775,22 +775,24 @@ function renderReportsOverview(snapshot) {
   const boardHeadline =
     reportWatchlistMode === "all"
       ? boardRows.length
-        ? `${pluralize(manualReviewCount, "thread")} need manual review`
+        ? "Review board"
         : "Reports are in sync"
-      : `${activeViewLabel} · ${pluralize(filteredRows.length, "thread")}`;
+      : activeViewLabel;
 
   setAppBarHeader({
     eyebrow: "Reports",
     headline: boardHeadline,
     subline: latest
-      ? `${pluralize(manualReviewCount, "thread")} need review, ${pluralize(highPriorityCount, "thread")} are high priority, ${pluralize(greenLaneCount, "thread")} can keep moving, and ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL replies.`
+      ? reportWatchlistMode === "all"
+        ? `${pluralize(manualReviewCount, "thread")} are blocked, ${pluralize(highPriorityCount, "thread")} need close watch, ${pluralize(waitingOnKolCount, "thread")} are waiting only, and ${pluralize(greenLaneCount, "thread")} are safe to continue.`
+        : `${pluralize(filteredRows.length, "thread")} are in this lane. Open a row to work the full record.`
       : "No report snapshots are available yet.",
   });
   setTopStats([
     { label: "Snapshot", value: formatTimestamp(snapshot.generated_at || "") },
     { label: "View", value: activeViewLabel },
     { label: "Rows", value: String(filteredRows.length) },
-    { label: "Sort", value: getReportSortLabel(reportWatchlistSort) },
+    { label: "Blocked", value: String(manualReviewCount) },
   ]);
 }
 
@@ -1331,15 +1333,21 @@ function renderAgentsPane(snapshot) {
     currentAgentId = agents[0] ? agents[0].id : (allAgents[0] ? allAgents[0].id : "primeus");
   }
 
+  const selected = getSelectedAgent(allAgents);
   renderAgentTable(agents);
-  renderAgentEditor(allAgents, editor);
+  renderAgentEditor(selected, editor);
   renderAgentAttention(allAgents);
-  renderFactGrid(agentSummaryGrid, [
-    { label: "Release", value: String(summary.release_version || "-") },
-    { label: "Mode", value: String(summary.recommended_mode || "-").toUpperCase() },
-    { label: "Codex daily ops", value: summary.codex_required_for_daily_ops ? "Required" : "Not required" },
-    { label: "Active threads", value: String(summary.total_active_threads != null ? summary.total_active_threads : 0) },
-  ]);
+  renderAgentProfileSummary(selected, summary);
+  if (agentAttentionSummary) {
+    const attentionCount = allAgents.filter(agentNeedsAttention).length;
+    if (!allAgents.length) {
+      agentAttentionSummary.textContent = "No agent data is available in the latest snapshot.";
+    } else if (!attentionCount) {
+      agentAttentionSummary.textContent = `${pluralize(allAgents.length, "agent")} are visible and no lane needs review right now.`;
+    } else {
+      agentAttentionSummary.textContent = `${pluralize(attentionCount, "agent")} need review in the current ${pluralize(allAgents.length, "agent")} roster.`;
+    }
+  }
 }
 
 function renderRuntimePane(snapshot) {
@@ -1491,8 +1499,6 @@ function renderReportsPane(snapshot) {
   renderReportsActions(snapshot, allWatchlistRows, monitoringSummary);
   renderReportWatchlist(filteredWatchlistRows);
   renderReportThreadInspector(selectedThread, monitoringSummary);
-  renderReportsSelectionInspector(selectedThread, monitoringSummary);
-  renderReportsStateList(allWatchlistRows);
   renderReportsWorkspace(selectedThread);
   renderTableRows(reportsSummaryTableBody, (reports.summary_rows || []).map((row) => [row.label || "", row.value || "-"]), {
     empty: "No coverage totals yet.",
@@ -1535,6 +1541,7 @@ function renderReportsSelectionInspector(selected, monitoringSummary) {
 
   renderFactGrid(approvalInspectorFacts, [
     { label: "KOL", value: selected.kol_username || selected.label || "Unknown" },
+    { label: "Workflow", value: getReportWorkflowStageLabel(selected) },
     { label: "Issue", value: selected.issue_label || titleCase(selected.issue || "review") },
     { label: "State", value: selected.status_label || titleCase(selected.status || "unknown") },
     { label: "Owner", value: selected.owner_label || titleCase(selected.owner || "unknown") },
@@ -1772,10 +1779,10 @@ function renderReportBoardHeaders() {
 function getReportWatchlistModeLabel(mode) {
   const labels = {
     all: "All threads",
-    manual: "Manual Review",
-    priority: "High Priority",
-    green: "Green Lane",
-    waiting: "Waiting on KOL",
+    manual: "Blocked",
+    priority: "Watch closely",
+    green: "Safe to continue",
+    waiting: "Waiting only",
     john: "John",
     sora: "Sora",
   };
@@ -1926,7 +1933,6 @@ function renderReportWatchlist(rows) {
             <span class="table-primary">
               <strong>${escapeHtml(row.kol_username || row.label || "Unknown")}</strong>
               <span>${escapeHtml(compactText(row.thread_id || row.source || "Thread row", 72))}</span>
-              <span>${escapeHtml("Open record")}</span>
             </span>
           </button>
         `,
@@ -1950,7 +1956,7 @@ function renderReportWatchlist(rows) {
       };
     }),
     {
-      empty: "No priority threads right now.",
+      empty: "No threads match this lane right now.",
       colspan: columns.length,
       allowHtml: true,
     },
@@ -2010,6 +2016,7 @@ function renderReportThreadInspector(selected, monitoringSummary) {
   renderFactGrid(reportsThreadFacts, [
     { label: "KOL handle", value: selected.kol_username || selected.label || "Unknown" },
     { label: "Thread id", value: selected.thread_id || selected.source || "-" },
+    { label: "Workflow", value: getReportWorkflowStageLabel(selected) },
     { label: "Owner", value: selected.owner_label || titleCase(selected.owner || "unknown") },
     { label: "Current state", value: selected.status_label || titleCase(selected.status || "unknown") },
     { label: "Decision lane", value: selected.lane_label || titleCase(selected.lane || "unknown") },
@@ -2037,7 +2044,7 @@ function renderReportThreadInspector(selected, monitoringSummary) {
     reportsDetailRuntime,
     [
       { label: "Review queue pressure", value: `${pluralize(approvals, "approval")} and ${pluralize(escalations, "escalation")} are open overall` },
-      { label: "Focus bucket", value: titleCase(focusMode.replaceAll("_", " ")) },
+      { label: "Focus lane", value: getReportWatchlistModeLabel(focusMode) },
       { label: "Manual review", value: manualReview ? "Yes" : "No" },
       { label: "Waiting on KOL", value: waitingOnKol ? "Yes" : "No" },
       { label: "Green lane", value: greenLane ? "Yes" : "No" },
@@ -2071,152 +2078,79 @@ function renderReportThreadInspector(selected, monitoringSummary) {
 
 function renderReportsActions(snapshot, boardRows, monitoringSummary) {
   const manualReviewRows = boardRows.filter(needsManualReview);
-  const escalationRows = boardRows.filter(hasEscalationPressure);
+  const highPriorityRows = boardRows.filter(isHighPriorityThread);
   const greenLaneRows = boardRows.filter(isGreenLaneThread);
   const waitingOnKolRows = boardRows.filter(isWaitingOnKolThread);
-  const approvals = Number(monitoringSummary.pending_approval_count || 0);
   const escalations = Number(monitoringSummary.escalation_count || 0);
-  const rows = [];
-
-  if (manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(manualReviewRows.length, "thread")} need manual approval`,
-      summary: `${formatWatchlistNames(manualReviewRows)} still need human review before the next send.`,
-      tone: "blocked",
+  const rows = [
+    {
+      label: "Blocked",
+      value: manualReviewRows.length,
+      summary: manualReviewRows.length
+        ? "Human review is still required before the next send."
+        : "No thread is blocked on manual review right now.",
+      tone: manualReviewRows.length ? "blocked" : "active",
       mode: "manual",
-      action: "Focus manual review",
-    });
-  }
-
-  if (escalationRows.length || escalations > 0) {
-    rows.push({
-      title: `${pluralize(escalationRows.length || escalations, "thread")} carry escalation pressure`,
-      summary: "These rows are carrying escalation context and should stay visible until the decision lands.",
-      tone: "blocked",
+      action: "Open blocked lane",
+    },
+    {
+      label: "Watch closely",
+      value: highPriorityRows.length,
+      summary: highPriorityRows.length
+        ? "Urgent timing or risky mismatches still need operator eyes."
+        : "No thread needs close watch right now.",
+      tone: highPriorityRows.length ? "pending" : "active",
       mode: "priority",
-      action: "Focus high priority",
-    });
-  }
-
-  if (approvals > 0 && !manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(approvals, "approval")} are pending`,
-      summary: "Approvals are open even though no watchlist row is marked as manual review yet.",
-      tone: "pending",
-      route: "reports",
-      action: "Open review queue",
-    });
-  }
-
-  if (greenLaneRows.length) {
-    rows.push({
-      title: `${pluralize(greenLaneRows.length, "thread")} can keep moving`,
-      summary: `${formatWatchlistNames(greenLaneRows)} are in low-friction lanes and do not need manual review right now.`,
-      tone: "active",
-      mode: "green",
-      action: "Focus green lanes",
-    });
-  }
-
-  if (waitingOnKolRows.length) {
-    rows.push({
-      title: `${pluralize(waitingOnKolRows.length, "thread")} are waiting on KOL replies`,
-      summary: `${formatWatchlistNames(waitingOnKolRows)} are currently in a wait state, so they only need monitoring.`,
-      tone: "pending",
+      action: escalations ? `Open watch lane · ${pluralize(escalations, "escalation")} open overall` : "Open watch lane",
+    },
+    {
+      label: "Waiting only",
+      value: waitingOnKolRows.length,
+      summary: waitingOnKolRows.length
+        ? "These threads are parked until the KOL replies or the state shifts."
+        : "No visible thread is currently waiting on a KOL reply.",
+      tone: waitingOnKolRows.length ? "pending" : "active",
       mode: "waiting",
-      action: "Focus waiting threads",
-    });
-  }
+      action: "Open waiting lane",
+    },
+    {
+      label: "Safe to continue",
+      value: greenLaneRows.length,
+      summary: greenLaneRows.length
+        ? "These threads can keep moving without manual intervention."
+        : "No low-friction lane is visible in this snapshot.",
+      tone: greenLaneRows.length ? "active" : "pending",
+      mode: "green",
+      action: "Open safe lane",
+    },
+  ];
 
-  reportsActionSummary.textContent = rows.length
-    ? "These queue cards use the same board rows as the table below, so counts and thread lists stay aligned."
-    : "No immediate report issue is visible in the current snapshot.";
+  reportsActionSummary.textContent = "Use these lanes to cut the same board into blocked, watch, waiting, and safe work. Open a row only when you need the full thread page.";
   reportsActionList.innerHTML = "";
 
-  if (!rows.length) {
-    reportsActionList.innerHTML = `
-      <li class="attention-item">
-        <div class="attention-topline">
-          <strong>Report queue is clear.</strong>
-          ${badge("Stable", "active")}
-        </div>
-        <p class="attention-text">No approval-heavy or blocked KOL thread is visible in the current snapshot.</p>
-      </li>
-    `;
-    return;
-  }
-
   for (const row of rows) {
-    const li = document.createElement("li");
-    li.className = "attention-item";
-    li.innerHTML = `
-      <div class="attention-topline">
-        <strong>${escapeHtml(row.title)}</strong>
-        ${badge(humanizeStatus(row.tone), badgeClass(row.tone))}
-      </div>
-      <p class="attention-text">${escapeHtml(row.summary)}</p>
-      ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">${escapeHtml(row.action)}</button>` : ""}
-      ${row.route ? `<button class="inline-action" type="button" data-route-target="${escapeHtml(row.route)}">${escapeHtml(row.action)}</button>` : ""}
+    const active = reportWatchlistMode === row.mode;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `summary-card summary-card-button summary-card--${row.tone}${active ? " is-active" : ""}`;
+    button.dataset.watchlistModeSet = row.mode;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    button.innerHTML = `
+      <span class="summary-card-title">${escapeHtml(row.label)}</span>
+      <strong class="summary-card-value">${escapeHtml(String(row.value || 0))}</strong>
+      <p class="summary-card-support">${escapeHtml(row.summary)}</p>
+      <span class="summary-card-status">${escapeHtml(row.action)}</span>
     `;
-    reportsActionList.appendChild(li);
+    reportsActionList.appendChild(button);
   }
 }
 
-function renderReportsStateList(rows) {
-  const visibleRows = [
-    {
-      label: "Manual review",
-      value: rows.filter(needsManualReview).length,
-      summary: "These threads are blocked until someone reviews the next move.",
-      mode: "manual",
-    },
-    {
-      label: "High priority",
-      value: rows.filter(isHighPriorityThread).length,
-      summary: "These rows should be read before the calmer lanes because their priority score is high.",
-      mode: "priority",
-    },
-    {
-      label: "Green lanes",
-      value: rows.filter(isGreenLaneThread).length,
-      summary: "These threads can usually continue without a manual handoff.",
-      mode: "green",
-    },
-    {
-      label: "Waiting on KOL",
-      value: rows.filter(isWaitingOnKolThread).length,
-      summary: "These threads mainly need monitoring because the next move belongs to the KOL.",
-      mode: "waiting",
-    },
-  ].filter((row) => row.value > 0);
-  reportsStateSummary.textContent = visibleRows.length
-    ? "These decision buckets use the same logic source as the queue cards and the board rows."
-    : "No decision bucket is visible in the current snapshot.";
-  reportsStateList.innerHTML = "";
-
-  if (!visibleRows.length) {
-    reportsStateList.innerHTML = `
-      <li class="attention-item">
-        <strong>No decision buckets.</strong>
-        <p class="attention-text">Monitoring did not return enough rows to build the current decision buckets.</p>
-      </li>
-    `;
-    return;
-  }
-
-  for (const row of visibleRows) {
-    const li = document.createElement("li");
-    li.className = "attention-item";
-    li.innerHTML = `
-      <div class="attention-topline">
-        <strong>${escapeHtml(row.label || "Unknown")}</strong>
-        <span class="summary-count">${escapeHtml(String(row.value || "0"))}</span>
-      </div>
-      <p class="attention-text">${escapeHtml(row.summary || "")}</p>
-      ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">Filter matching threads</button>` : ""}
-    `;
-    reportsStateList.appendChild(li);
-  }
+function getReportWorkflowStageLabel(row) {
+  if (needsManualReview(row)) return "Blocked";
+  if (isHighPriorityThread(row)) return "Watch closely";
+  if (isWaitingOnKolThread(row)) return "Waiting only";
+  if (isGreenLaneThread(row)) return "Safe to continue";
+  return "Needs attention";
 }
 
 function renderApprovalsPane(snapshot) {
@@ -2516,12 +2450,13 @@ function renderAgentTable(agents) {
   );
 }
 
-function renderAgentEditor(agents, editor) {
-  const selected = agents.find((item) => item.id === currentAgentId) || agents[0] || null;
+function renderAgentEditor(selected, editor) {
   if (!selected) {
     agentEditorTitle.textContent = "No agent";
     agentEditorSummary.textContent = "No agent data is available in the latest snapshot.";
+    if (agentOverviewBadges) agentOverviewBadges.innerHTML = "";
     agentLiveFacts.innerHTML = "";
+    agentContextList.innerHTML = `<li class="mini-list-item"><span>No agent context.</span></li>`;
     agentLinkedFiles.innerHTML = `<li class="mini-list-item"><span>No linked files.</span></li>`;
     return;
   }
@@ -2530,6 +2465,13 @@ function renderAgentEditor(agents, editor) {
   const live = selected.live || {};
   agentEditorTitle.textContent = selected.label || "Unknown agent";
   agentEditorSummary.textContent = selected.summary || "No summary available.";
+  if (agentOverviewBadges) {
+    agentOverviewBadges.innerHTML = [
+      badge(selected.kind || "Agent", "stale"),
+      badge(humanizeStatus(selected.status || "unknown"), badgeClass(selected.status)),
+      badge(buildAgentHealth(selected), badgeClass(classifyAgentHealthTone(selected))),
+    ].join("");
+  }
 
   renderFactGrid(agentLiveFacts, [
     { label: "Status", value: humanizeStatus(selected.status || "unknown") },
@@ -2539,6 +2481,17 @@ function renderAgentEditor(agents, editor) {
     { label: "Approvals", value: live.approvals || metricValue(selected.metrics || [], "Approvals") || "-" },
     { label: "Health", value: buildAgentHealth(selected) },
   ]);
+
+  renderMiniList(
+    agentContextList,
+    [
+      { label: "Role", value: selected.kind || "Not recorded" },
+      { label: "Handle", value: selected.handle || "Not recorded" },
+      { label: "Last updated", value: formatOptionalTimestamp(controls.updated_at || "") },
+      { label: "Control file", value: basenamePath((editor || {}).file || "") || "Not recorded" },
+    ],
+    "No agent context.",
+  );
 
   renderMiniList(
     agentLinkedFiles,
@@ -2581,9 +2534,31 @@ function renderAgentAttention(agents) {
     li.innerHTML = `
       <strong>${escapeHtml(item.label || "Unknown")}</strong>
       <p class="attention-text">${escapeHtml(describeAgentAttention(item))}</p>
+      <button class="inline-action" type="button" data-select-agent="${escapeHtml(item.id || "")}">Review agent</button>
     `;
     agentAttentionList.appendChild(li);
   }
+}
+
+function renderAgentProfileSummary(selected, summary) {
+  if (!selected) {
+    renderFactGrid(agentSummaryGrid, [
+      { label: "Roster", value: "No agents loaded" },
+      { label: "Mode", value: String(summary.recommended_mode || "-").toUpperCase() },
+      { label: "Active threads", value: String(summary.total_active_threads != null ? summary.total_active_threads : 0) },
+      { label: "Codex daily ops", value: summary.codex_required_for_daily_ops ? "Required" : "Not required" },
+    ]);
+    return;
+  }
+
+  const controls = selected.controls || {};
+  renderFactGrid(agentSummaryGrid, [
+    { label: "Provider", value: controls.provider || "Not recorded" },
+    { label: "Lane", value: controls.lane || "Not recorded" },
+    { label: "Mode target", value: controls.mode_target || "Not recorded" },
+    { label: "Approval policy", value: compactText(controls.approval_policy || "Not recorded", 120) },
+    { label: "Last updated", value: formatOptionalTimestamp(controls.updated_at || "") },
+  ]);
 }
 
 function renderAgentMetrics(metrics) {
@@ -2623,6 +2598,10 @@ function buildAgentHealth(item) {
     }
   }
   return flags.length ? titleCase(flags.join(", ")) : "Healthy";
+}
+
+function classifyAgentHealthTone(item) {
+  return buildAgentHealth(item) === "Healthy" ? "active" : "pending";
 }
 
 function buildRuntimeWorkerMeta(item) {
@@ -3235,6 +3214,17 @@ function formatTimestamp(value) {
   });
 }
 
+function formatOptionalTimestamp(value) {
+  return value ? formatTimestamp(value) : "Not recorded";
+}
+
+function basenamePath(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  const parts = text.split("/").filter(Boolean);
+  return parts[parts.length - 1] || text;
+}
+
 function describeSnapshotAge(value) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value || "-";
@@ -3297,6 +3287,10 @@ function filterAgentRows(items) {
       .toLowerCase();
     return haystack.includes(agentFilterQuery);
   });
+}
+
+function getSelectedAgent(items) {
+  return items.find((item) => item.id === currentAgentId) || items[0] || null;
 }
 
 function filterWatchlistRows(rows) {

@@ -195,6 +195,7 @@
                   </div>
                 </header>
 
+                <p class="section-copy" id="agent-attention-summary">Waiting for the next snapshot.</p>
                 <ul class="attention-list" id="agent-attention-list"></ul>
               </article>
             </div>
@@ -203,7 +204,7 @@
               <article class="surface">
                 <header class="section-head">
                   <div>
-                    <p class="eyebrow">Editor</p>
+                    <p class="eyebrow">Overview</p>
                     <h3>Selected agent</h3>
                   </div>
                 </header>
@@ -213,14 +214,26 @@
                   <p id="agent-editor-summary">Pick an agent from the table to inspect current state and edit its control profile.</p>
                 </div>
 
+                <div class="filter-chip-row agent-overview-badges" id="agent-overview-badges"></div>
+
                 <section class="stack-section">
                   <span class="meta-label">Current state</span>
                   <dl class="fact-grid fact-grid--stack fact-grid--compact" id="agent-live-facts"></dl>
                 </section>
 
                 <section class="stack-section">
+                  <span class="meta-label">Agent context</span>
+                  <ul class="mini-list" id="agent-context-list"></ul>
+                </section>
+
+                <section class="stack-section">
                   <span class="meta-label">Linked files</span>
                   <ul class="mini-list" id="agent-linked-files"></ul>
+                </section>
+
+                <section class="stack-section">
+                  <span class="meta-label">Editable control profile</span>
+                  <p class="form-note">Only stored controls change here. The live state above stays read-only.</p>
                 </section>
 
                 <form class="control-form" id="agent-form">
@@ -273,8 +286,8 @@
               <article class="surface">
                 <header class="section-head">
                   <div>
-                    <p class="eyebrow">Policy</p>
-                    <h3>Control summary</h3>
+                    <p class="eyebrow">Profile</p>
+                    <h3>Stored control summary</h3>
                   </div>
                 </header>
 
@@ -365,30 +378,29 @@
 
         <section class="route-pane" id="route-reports" hidden>
           <section class="reports-view reports-view--board" id="reports-board-view">
-            <section class="content-grid">
-              <div class="main-stack">
+            <div class="main-stack">
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Review</p>
-                      <h3>Needs Review Now</h3>
+                      <p class="eyebrow">Workflow</p>
+                      <h3>Review Lanes</h3>
                     </div>
                   </header>
 
                   <p class="section-copy" id="reports-action-summary">Waiting for the next snapshot.</p>
 
-                  <ul class="attention-list" id="reports-action-list"></ul>
+                  <div class="summary-grid summary-grid--reports-flow" id="reports-action-list"></div>
                 </article>
 
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Threads</p>
-                      <h3>KOL status board</h3>
+                      <p class="eyebrow">Board</p>
+                      <h3>Review board</h3>
                     </div>
                   </header>
 
-                  <p class="section-copy">This board is for fast scanning only. Open a row to inspect the full thread inside the same workspace.</p>
+                  <p class="section-copy">Scan the active review lanes here, then open a row when you need the full operator record.</p>
 
                   <div class="surface-toolbar surface-toolbar--stack">
                     <div class="surface-toolbar-row">
@@ -396,10 +408,10 @@
                         <span class="meta-label">Saved views</span>
                         <div class="filter-chip-row" id="report-watchlist-mode-filters" aria-label="Watchlist filters">
                           <button class="filter-chip is-active" type="button" data-watchlist-mode="all" data-watchlist-label="All">All</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="manual" data-watchlist-label="Manual Review">Manual Review</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="priority" data-watchlist-label="High Priority">High Priority</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="green" data-watchlist-label="Green Lane">Green Lane</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="waiting" data-watchlist-label="Waiting on KOL">Waiting on KOL</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="manual" data-watchlist-label="Blocked">Blocked</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="priority" data-watchlist-label="Watch closely">Watch closely</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="green" data-watchlist-label="Safe to continue">Safe to continue</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="waiting" data-watchlist-label="Waiting only">Waiting only</button>
                           <button class="filter-chip" type="button" data-watchlist-mode="john" data-watchlist-label="John">John</button>
                           <button class="filter-chip" type="button" data-watchlist-mode="sora" data-watchlist-label="Sora">Sora</button>
                         </div>
@@ -456,68 +468,25 @@
                     </table>
                   </div>
                 </article>
-              </div>
 
-              <aside class="side-stack">
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Selection</p>
-                      <h3>Selected Thread</h3>
+                      <p class="eyebrow">Source</p>
+                      <h3>Report source</h3>
                     </div>
                   </header>
 
-                  <p class="section-copy" id="approval-inspector-summary">Pick a row from the board to inspect why it matters and what should happen next.</p>
+                  <p class="section-copy" id="reports-run-summary">Use the current monitoring run as the source of truth for this board and compare recent runs if counts feel off.</p>
 
                   <section class="stack-section stack-section--first">
-                    <span class="meta-label">Current focus</span>
-                    <dl class="fact-grid fact-grid--stack fact-grid--compact" id="approval-inspector-facts"></dl>
+                    <span class="meta-label">Current run</span>
+                    <dl class="fact-grid fact-grid--stack fact-grid--compact" id="reports-run-facts"></dl>
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Suggested next step</span>
-                    <ul class="mini-list" id="approval-inspector-actions"></ul>
-                  </section>
-                </article>
-
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
-                      <p class="eyebrow">Queue mix</p>
-                      <h3>Decision buckets</h3>
-                    </div>
-                  </header>
-
-                  <p class="section-copy" id="reports-state-summary">Waiting for the next snapshot.</p>
-
-                  <ul class="attention-list" id="reports-state-list"></ul>
-                </article>
-
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
-                      <p class="eyebrow">Reports</p>
-                      <h3>Selected report run</h3>
-                    </div>
-                  </header>
-
-                  <p class="section-copy" id="reports-run-summary">Pick a report run to inspect its coverage and freshness.</p>
-
-                    <section class="stack-section stack-section--first">
-                      <span class="meta-label">Current run</span>
-                      <dl class="fact-grid fact-grid--stack fact-grid--compact" id="reports-run-facts"></dl>
-                    </section>
-                </article>
-
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
-                      <p class="eyebrow">Runs</p>
-                      <h3>Report runs</h3>
-                    </div>
-                  </header>
-
-                  <div class="table-wrap">
+                    <span class="meta-label">Recent runs</span>
+                    <div class="table-wrap">
                     <table class="data-table data-table--compact" aria-label="Report runs">
                       <thead>
                         <tr>
@@ -528,16 +497,16 @@
                       </thead>
                       <tbody id="reports-run-table-body"></tbody>
                     </table>
-                  </div>
+                    </div>
+                  </section>
                 </article>
-              </aside>
-            </section>
+            </div>
           </section>
 
           <section class="reports-view reports-view--detail" id="reports-detail-view" hidden>
             <article class="surface reports-detail-shell">
               <div class="reports-detail-topbar">
-                <button class="action-button" id="reports-detail-back" type="button">Back to board</button>
+                <button class="action-button" id="reports-detail-back" type="button">Back to review board</button>
                 <span class="meta-label" id="reports-detail-path">Reports / Thread</span>
               </div>
 
@@ -559,12 +528,12 @@
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Conversation context</span>
+                    <span class="meta-label">Operator context</span>
                     <ul class="mini-list" id="reports-detail-context"></ul>
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Related report and runtime context</span>
+                    <span class="meta-label">Source context</span>
                     <ul class="mini-list" id="reports-detail-runtime"></ul>
                   </section>
                 </div>

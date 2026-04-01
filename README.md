@@ -111,6 +111,8 @@ You can also override:
 
 The next architecture is documented in `CONTROL_PLANE_V2_ARCHITECTURE_SPEC.md`.
 
+Reference-study rules for dashboard/UI inspiration live in `DASHBOARD_REFERENCE_RESEARCH_RULES.md`.
+
 That spec defines how this project can evolve into a department-aware control plane with:
 
 - Department Workspace

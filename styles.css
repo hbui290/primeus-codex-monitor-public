@@ -636,6 +636,10 @@ a:focus-visible,
   gap: 12px;
 }
 
+.summary-grid--reports-flow {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .summary-card {
   display: grid;
   gap: 8px;
@@ -653,10 +657,37 @@ a:focus-visible,
   text-align: left;
   font: inherit;
   cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 .summary-card-button:hover {
   background: rgba(24, 21, 17, 0.03);
+}
+
+.summary-card-button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.summary-card-button.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.summary-card--blocked {
+  border-color: rgba(139, 45, 41, 0.14);
+  background: rgba(243, 217, 215, 0.22);
+}
+
+.summary-card--pending {
+  border-color: rgba(138, 87, 22, 0.14);
+  background: rgba(244, 226, 199, 0.22);
+}
+
+.summary-card--active {
+  border-color: rgba(23, 98, 79, 0.14);
+  background: rgba(220, 239, 232, 0.22);
 }
 
 .summary-card-title {
@@ -1365,6 +1396,10 @@ a:focus-visible,
   gap: 6px;
 }
 
+.agent-overview-badges {
+  margin-top: 14px;
+}
+
 .editor-meta strong {
   font-size: 1rem;
 }
@@ -1458,6 +1493,10 @@ a:focus-visible,
   }
 
   .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid--reports-flow {
     grid-template-columns: 1fr;
   }
 }
