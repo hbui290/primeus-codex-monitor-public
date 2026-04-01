@@ -13,6 +13,7 @@ const statChips = Array.from(document.querySelectorAll(".stat-chip"));
 const refreshButton = document.querySelector("#refresh-button");
 const appearanceThemeSelect = document.querySelector("#appearance-theme");
 const appearanceDensityControls = document.querySelector("#appearance-density-controls");
+const appearanceRefreshIntervalSelect = document.querySelector("#appearance-refresh-interval");
 const actionStatus = document.querySelector("#action-status");
 const statLabel1 = document.querySelector("#stat-label-1");
 const statLabel2 = document.querySelector("#stat-label-2");
@@ -49,6 +50,7 @@ const reportsDetailContext = document.querySelector("#reports-detail-context");
 const reportsDetailRuntime = document.querySelector("#reports-detail-runtime");
 const agentTableBody = document.querySelector("#agent-table-body");
 const agentFilterInput = document.querySelector("#agent-filter-input");
+const agentRosterGrid = document.querySelector("#agent-roster-grid");
 const agentSummaryGrid = document.querySelector("#agent-summary-grid");
 const agentAttentionList = document.querySelector("#agent-attention-list");
 const agentAttentionSummary = document.querySelector("#agent-attention-summary");
@@ -155,13 +157,17 @@ let reportWatchlistVisibleColumns = new Set(["owner", "lane", "due", "latest"]);
 let approvalFilterQuery = "";
 let approvalMode = "all";
 let currentApprovalCaseKey = "";
-const AUTO_REFRESH_MS = 60000;
+const AUTO_REFRESH_DEFAULT_MS = 60000;
 const APPEARANCE_THEME_KEY = "primeus-monitor-theme";
 const APPEARANCE_DENSITY_KEY = "primeus-monitor-density";
+const APPEARANCE_REFRESH_KEY = "primeus-monitor-refresh-ms";
+const ALLOWED_REFRESH_INTERVALS = [0, 10000, 30000, 60000, 300000, 600000];
 const ALLOWED_THEMES = new Set(["paper", "control", "terminal"]);
 const ALLOWED_DENSITIES = new Set(["comfortable", "compact"]);
 let currentTheme = readPreference(APPEARANCE_THEME_KEY, "paper");
 let currentDensity = readPreference(APPEARANCE_DENSITY_KEY, "comfortable");
+let currentRefreshMs = readRefreshPreference();
+let autoRefreshTimer = null;
 
 const REPORT_BOARD_COLUMNS = [
   { key: "thread", label: "KOL thread", required: true },
@@ -241,6 +247,12 @@ if (appearanceDensityControls) {
     const button = event.target.closest("[data-density]");
     if (!button) return;
     setDensityPreference(button.dataset.density || "comfortable");
+  });
+}
+
+if (appearanceRefreshIntervalSelect) {
+  appearanceRefreshIntervalSelect.addEventListener("change", (event) => {
+    setRefreshPreference(Number(event.target.value || 0));
   });
 }
 
@@ -487,6 +499,15 @@ agentTableBody.addEventListener("click", (event) => {
   renderAgentsPane(currentSnapshot);
 });
 
+if (agentRosterGrid) {
+  agentRosterGrid.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-select-agent]");
+    if (!button) return;
+    currentAgentId = button.dataset.selectAgent || currentAgentId;
+    renderAgentsPane(currentSnapshot);
+  });
+}
+
 agentAttentionList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-select-agent]");
   if (!button) return;
@@ -556,6 +577,10 @@ function applyAppearancePreferences() {
       button.setAttribute("aria-pressed", active ? "true" : "false");
     }
   }
+
+  if (appearanceRefreshIntervalSelect) {
+    appearanceRefreshIntervalSelect.value = String(currentRefreshMs);
+  }
 }
 
 function setThemePreference(theme) {
@@ -568,6 +593,35 @@ function setDensityPreference(density) {
   currentDensity = ALLOWED_DENSITIES.has(density) ? density : "comfortable";
   writePreference(APPEARANCE_DENSITY_KEY, currentDensity);
   applyAppearancePreferences();
+}
+
+function readRefreshPreference() {
+  const raw = Number(readPreference(APPEARANCE_REFRESH_KEY, String(AUTO_REFRESH_DEFAULT_MS)));
+  return ALLOWED_REFRESH_INTERVALS.includes(raw) ? raw : AUTO_REFRESH_DEFAULT_MS;
+}
+
+function setRefreshPreference(value) {
+  currentRefreshMs = ALLOWED_REFRESH_INTERVALS.includes(value) ? value : AUTO_REFRESH_DEFAULT_MS;
+  writePreference(APPEARANCE_REFRESH_KEY, String(currentRefreshMs));
+  applyAppearancePreferences();
+  configureAutoRefresh();
+  setActionStatus(
+    currentRefreshMs
+      ? `Auto refresh set to ${formatRefreshIntervalLabel(currentRefreshMs)}.`
+      : "Auto refresh paused. Use Refresh snapshot for manual updates.",
+    "pending",
+  );
+}
+
+function configureAutoRefresh() {
+  if (autoRefreshTimer) {
+    window.clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
+  if (!currentRefreshMs) return;
+  autoRefreshTimer = window.setInterval(() => {
+    void refreshSnapshotSilently();
+  }, currentRefreshMs);
 }
 
 async function loadSnapshot() {
@@ -1411,6 +1465,7 @@ function renderAgentsPane(snapshot) {
   }
 
   const selected = getSelectedAgent(allAgents);
+  renderAgentRosterCards(allAgents);
   renderAgentTable(agents);
   renderAgentEditor(selected, editor);
   renderAgentAttention(allAgents);
@@ -2601,6 +2656,50 @@ function renderAgentTable(agents) {
   );
 }
 
+function renderAgentRosterCards(agents) {
+  if (!agentRosterGrid) return;
+  agentRosterGrid.innerHTML = "";
+  if (!agents.length) {
+    agentRosterGrid.innerHTML = `
+      <article class="summary-card">
+        <span class="summary-card-title">Roster</span>
+        <strong class="summary-card-value">No agents</strong>
+        <p class="summary-card-support">The latest snapshot did not return any agent rows.</p>
+      </article>
+    `;
+    return;
+  }
+
+  for (const item of agents) {
+    const selected = item.id === currentAgentId;
+    const threads = item.live && item.live.threads ? item.live.threads : metricValue(item.metrics || [], "Threads") || "0";
+    const approvals = item.live && item.live.approvals ? item.live.approvals : metricValue(item.metrics || [], "Approvals") || "0";
+    const route = ((item.controls || {}).lane)
+      || ((item.live || {}).route)
+      || metricValue(item.metrics || [], "Route")
+      || metricValue(item.metrics || [], "Lane")
+      || "No route";
+    const handle = compactText(item.handle || "No binding", 32);
+    const role = compactText(item.kind || "Agent", 24);
+    const provider = compactText(((item.controls || {}).provider) || "Unassigned provider", 34);
+    const workloadText = `${threads} threads · ${approvals} approvals`;
+    const button = document.createElement("button");
+    button.className = `summary-card summary-card-button${selected ? " is-selected" : ""}`;
+    button.type = "button";
+    button.dataset.selectAgent = item.id || "";
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+    button.innerHTML = `
+      <span class="summary-card-title">${escapeHtml(item.label || "Agent")}</span>
+      <strong class="summary-card-value">${escapeHtml(humanizeStatus(item.status || "unknown"))}</strong>
+      <p class="summary-card-support">${escapeHtml(`${role} · ${handle}`)}</p>
+      <span class="summary-card-meta">${escapeHtml(workloadText)}</span>
+      <span class="summary-card-status">${escapeHtml(compactText(route, 40))}</span>
+      <span class="summary-card-note">${escapeHtml(provider)}</span>
+    `;
+    agentRosterGrid.appendChild(button);
+  }
+}
+
 function renderAgentEditor(selected, editor) {
   if (!selected) {
     agentEditorTitle.textContent = "No agent";
@@ -3369,6 +3468,13 @@ function formatOptionalTimestamp(value) {
   return value ? formatTimestamp(value) : "Not recorded";
 }
 
+function formatRefreshIntervalLabel(value) {
+  if (!value) return "manual";
+  if (value < 60000) return `${Math.round(value / 1000)}s`;
+  if (value % 60000 === 0) return `${Math.round(value / 60000)} min`;
+  return `${Math.round(value / 1000)}s`;
+}
+
 function basenamePath(value) {
   const text = String(value || "").trim();
   if (!text) return "";
@@ -3521,6 +3627,7 @@ function sortRunsByGeneratedAt(runs) {
 }
 
 applyAppearancePreferences();
+configureAutoRefresh();
 
 loadSnapshot()
   .then(render)
@@ -3536,7 +3643,3 @@ loadSnapshot()
     snapshotTs.textContent = "Unavailable";
     roomFeed.innerHTML = `<article class="room-item"><p class="room-text">${escapeHtml(compactText(error.message, 170))}</p></article>`;
   });
-
-window.setInterval(() => {
-  void refreshSnapshotSilently();
-}, AUTO_REFRESH_MS);

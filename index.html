@@ -43,6 +43,18 @@
               <button class="filter-chip" type="button" data-density="compact">Compact</button>
             </div>
           </div>
+
+          <label class="field" for="appearance-refresh-interval">
+            <span class="field-label">Auto refresh</span>
+            <select id="appearance-refresh-interval">
+              <option value="0">Manual</option>
+              <option value="10000">10s</option>
+              <option value="30000">30s</option>
+              <option value="60000">1 min</option>
+              <option value="300000">5 min</option>
+              <option value="600000">10 min</option>
+            </select>
+          </label>
         </section>
 
         <div class="nav-sections" aria-label="Sections">
@@ -183,6 +195,8 @@
                 </header>
 
                 <p class="section-copy">Current state stays read-only. The selected agent profile on the right controls naming, linked identity files, lane notes, and operating policy.</p>
+
+                <div class="summary-grid" id="agent-roster-grid"></div>
 
                 <div class="surface-toolbar">
                   <label class="toolbar-search" for="agent-filter-input">

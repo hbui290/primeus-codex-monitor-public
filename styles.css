@@ -783,10 +783,24 @@ body[data-density="compact"] .data-table tbody td {
   text-align: left;
   font: inherit;
   cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .summary-card-button:hover {
   background: rgba(24, 21, 17, 0.03);
+}
+
+.summary-card-button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.summary-card-button.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 16px 30px rgba(19, 33, 68, 0.08);
+  transform: translateY(-1px);
 }
 
 .summary-card-title {
@@ -811,11 +825,18 @@ body[data-density="compact"] .data-table tbody td {
   line-height: 1.45;
 }
 
+.summary-card-meta,
 .summary-card-status {
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 600;
   line-height: 1.4;
+}
+
+.summary-card-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .reports-view {
