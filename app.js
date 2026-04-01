@@ -84,8 +84,6 @@ const reportWatchlistSortSelect = document.querySelector("#report-watchlist-sort
 const reportWatchlistColumns = document.querySelector("#report-watchlist-columns");
 const reportsActionSummary = document.querySelector("#reports-action-summary");
 const reportsActionList = document.querySelector("#reports-action-list");
-const reportsStateSummary = document.querySelector("#reports-state-summary");
-const reportsStateList = document.querySelector("#reports-state-list");
 const reportsThreadSummary = document.querySelector("#reports-thread-summary");
 const reportsThreadFacts = document.querySelector("#reports-thread-facts");
 const reportsThreadActions = document.querySelector("#reports-thread-actions");
@@ -241,14 +239,6 @@ reportsActionList.addEventListener("click", (event) => {
   const modeButton = event.target.closest("[data-watchlist-mode-set]");
   if (!modeButton) return;
   reportWatchlistMode = modeButton.dataset.watchlistModeSet || "all";
-  currentReportsView = "board";
-  renderReportsPane(currentSnapshot);
-});
-
-reportsStateList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-watchlist-mode-set]");
-  if (!button) return;
-  reportWatchlistMode = button.dataset.watchlistModeSet || "all";
   currentReportsView = "board";
   renderReportsPane(currentSnapshot);
 });
@@ -785,7 +775,7 @@ function renderReportsOverview(snapshot) {
   const boardHeadline =
     reportWatchlistMode === "all"
       ? boardRows.length
-        ? `${pluralize(manualReviewCount, "thread")} need manual review`
+        ? `${pluralize(manualReviewCount, "thread")} need operator review`
         : "Reports are in sync"
       : `${activeViewLabel} · ${pluralize(filteredRows.length, "thread")}`;
 
@@ -793,7 +783,7 @@ function renderReportsOverview(snapshot) {
     eyebrow: "Reports",
     headline: boardHeadline,
     subline: latest
-      ? `${pluralize(manualReviewCount, "thread")} need review, ${pluralize(highPriorityCount, "thread")} are high priority, ${pluralize(greenLaneCount, "thread")} can keep moving, and ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL replies.`
+      ? `${pluralize(manualReviewCount, "thread")} are blocked for review, ${pluralize(highPriorityCount, "thread")} need close watch, ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL, and ${pluralize(greenLaneCount, "thread")} can keep moving.`
       : "No report snapshots are available yet.",
   });
   setTopStats([
@@ -1508,7 +1498,6 @@ function renderReportsPane(snapshot) {
   renderReportWatchlist(filteredWatchlistRows);
   renderReportThreadInspector(selectedThread, monitoringSummary);
   renderReportsSelectionInspector(selectedThread, monitoringSummary);
-  renderReportsStateList(allWatchlistRows);
   renderReportsWorkspace(selectedThread);
   renderTableRows(reportsSummaryTableBody, (reports.summary_rows || []).map((row) => [row.label || "", row.value || "-"]), {
     empty: "No coverage totals yet.",
@@ -2092,146 +2081,65 @@ function renderReportsActions(snapshot, boardRows, monitoringSummary) {
   const waitingOnKolRows = boardRows.filter(isWaitingOnKolThread);
   const approvals = Number(monitoringSummary.pending_approval_count || 0);
   const escalations = Number(monitoringSummary.escalation_count || 0);
-  const rows = [];
-
-  if (manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(manualReviewRows.length, "thread")} need manual approval`,
-      summary: `${formatWatchlistNames(manualReviewRows)} still need human review before the next send.`,
-      tone: "blocked",
+  const rows = [
+    {
+      label: "Manual review",
+      value: manualReviewRows.length,
+      summary: manualReviewRows.length
+        ? `${formatWatchlistNames(manualReviewRows)} are blocked until a human decides the next move.`
+        : "No thread is blocked on manual review right now.",
+      tone: manualReviewRows.length ? "blocked" : "active",
       mode: "manual",
-      action: "Focus manual review",
-    });
-  }
-
-  if (escalationRows.length || escalations > 0) {
-    rows.push({
-      title: `${pluralize(escalationRows.length || escalations, "thread")} carry escalation pressure`,
-      summary: "These rows are carrying escalation context and should stay visible until the decision lands.",
-      tone: "blocked",
+      action: "Open blocked threads",
+    },
+    {
+      label: "High priority",
+      value: escalationRows.length || escalations,
+      summary: escalationRows.length || escalations
+        ? "These rows should stay visible because they carry escalation pressure or risky mismatches."
+        : "No escalation-heavy thread needs close watch right now.",
+      tone: escalationRows.length || escalations ? "pending" : "active",
       mode: "priority",
-      action: "Focus high priority",
-    });
-  }
-
-  if (approvals > 0 && !manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(approvals, "approval")} are pending`,
-      summary: "Approvals are open even though no watchlist row is marked as manual review yet.",
-      tone: "pending",
-      route: "reports",
-      action: "Open review queue",
-    });
-  }
-
-  if (greenLaneRows.length) {
-    rows.push({
-      title: `${pluralize(greenLaneRows.length, "thread")} can keep moving`,
-      summary: `${formatWatchlistNames(greenLaneRows)} are in low-friction lanes and do not need manual review right now.`,
-      tone: "active",
-      mode: "green",
-      action: "Focus green lanes",
-    });
-  }
-
-  if (waitingOnKolRows.length) {
-    rows.push({
-      title: `${pluralize(waitingOnKolRows.length, "thread")} are waiting on KOL replies`,
-      summary: `${formatWatchlistNames(waitingOnKolRows)} are currently in a wait state, so they only need monitoring.`,
-      tone: "pending",
+      action: "Open high priority",
+    },
+    {
+      label: "Waiting on KOL",
+      value: waitingOnKolRows.length,
+      summary: waitingOnKolRows.length
+        ? `${formatWatchlistNames(waitingOnKolRows)} are in a wait state and mainly need monitoring.`
+        : "No visible thread is currently waiting on a KOL reply.",
+      tone: waitingOnKolRows.length ? "pending" : "active",
       mode: "waiting",
-      action: "Focus waiting threads",
-    });
-  }
+      action: "Open waiting threads",
+    },
+    {
+      label: "Green lane",
+      value: greenLaneRows.length,
+      summary: greenLaneRows.length
+        ? `${formatWatchlistNames(greenLaneRows)} can keep moving without manual intervention.`
+        : "No low-friction lane is visible in this snapshot.",
+      tone: greenLaneRows.length ? "active" : "pending",
+      mode: "green",
+      action: "Open safe threads",
+    },
+  ];
 
-  reportsActionSummary.textContent = rows.length
-    ? "These queue cards use the same board rows as the table below, so counts and thread lists stay aligned."
-    : "No immediate report issue is visible in the current snapshot.";
+  reportsActionSummary.textContent = "Read the monitoring flow from blocked work to safe continuation. Each lane filters the same board below.";
   reportsActionList.innerHTML = "";
-
-  if (!rows.length) {
-    reportsActionList.innerHTML = `
-      <li class="attention-item">
-        <div class="attention-topline">
-          <strong>Report queue is clear.</strong>
-          ${badge("Stable", "active")}
-        </div>
-        <p class="attention-text">No approval-heavy or blocked KOL thread is visible in the current snapshot.</p>
-      </li>
-    `;
-    return;
-  }
 
   for (const row of rows) {
     const li = document.createElement("li");
     li.className = "attention-item";
     li.innerHTML = `
       <div class="attention-topline">
-        <strong>${escapeHtml(row.title)}</strong>
-        ${badge(humanizeStatus(row.tone), badgeClass(row.tone))}
+        <strong>${escapeHtml(row.label)}</strong>
+        <span class="summary-count">${escapeHtml(String(row.value || 0))}</span>
       </div>
       <p class="attention-text">${escapeHtml(row.summary)}</p>
+      ${badge(humanizeStatus(row.tone), badgeClass(row.tone))}
       ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">${escapeHtml(row.action)}</button>` : ""}
-      ${row.route ? `<button class="inline-action" type="button" data-route-target="${escapeHtml(row.route)}">${escapeHtml(row.action)}</button>` : ""}
     `;
     reportsActionList.appendChild(li);
-  }
-}
-
-function renderReportsStateList(rows) {
-  const visibleRows = [
-    {
-      label: "Manual review",
-      value: rows.filter(needsManualReview).length,
-      summary: "These threads are blocked until someone reviews the next move.",
-      mode: "manual",
-    },
-    {
-      label: "High priority",
-      value: rows.filter(isHighPriorityThread).length,
-      summary: "These rows should be read before the calmer lanes because their priority score is high.",
-      mode: "priority",
-    },
-    {
-      label: "Green lanes",
-      value: rows.filter(isGreenLaneThread).length,
-      summary: "These threads can usually continue without a manual handoff.",
-      mode: "green",
-    },
-    {
-      label: "Waiting on KOL",
-      value: rows.filter(isWaitingOnKolThread).length,
-      summary: "These threads mainly need monitoring because the next move belongs to the KOL.",
-      mode: "waiting",
-    },
-  ].filter((row) => row.value > 0);
-  reportsStateSummary.textContent = visibleRows.length
-    ? "These decision buckets use the same logic source as the queue cards and the board rows."
-    : "No decision bucket is visible in the current snapshot.";
-  reportsStateList.innerHTML = "";
-
-  if (!visibleRows.length) {
-    reportsStateList.innerHTML = `
-      <li class="attention-item">
-        <strong>No decision buckets.</strong>
-        <p class="attention-text">Monitoring did not return enough rows to build the current decision buckets.</p>
-      </li>
-    `;
-    return;
-  }
-
-  for (const row of visibleRows) {
-    const li = document.createElement("li");
-    li.className = "attention-item";
-    li.innerHTML = `
-      <div class="attention-topline">
-        <strong>${escapeHtml(row.label || "Unknown")}</strong>
-        <span class="summary-count">${escapeHtml(String(row.value || "0"))}</span>
-      </div>
-      <p class="attention-text">${escapeHtml(row.summary || "")}</p>
-      ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">Filter matching threads</button>` : ""}
-    `;
-    reportsStateList.appendChild(li);
   }
 }
 

@@ -383,8 +383,8 @@
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Review</p>
-                      <h3>Needs Review Now</h3>
+                      <p class="eyebrow">Workflow</p>
+                      <h3>Review workflow</h3>
                     </div>
                   </header>
 
@@ -496,41 +496,21 @@
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Queue mix</p>
-                      <h3>Decision buckets</h3>
-                    </div>
-                  </header>
-
-                  <p class="section-copy" id="reports-state-summary">Waiting for the next snapshot.</p>
-
-                  <ul class="attention-list" id="reports-state-list"></ul>
-                </article>
-
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
                       <p class="eyebrow">Reports</p>
-                      <h3>Selected report run</h3>
+                      <h3>Report source</h3>
                     </div>
                   </header>
 
                   <p class="section-copy" id="reports-run-summary">Pick a report run to inspect its coverage and freshness.</p>
 
-                    <section class="stack-section stack-section--first">
-                      <span class="meta-label">Current run</span>
-                      <dl class="fact-grid fact-grid--stack fact-grid--compact" id="reports-run-facts"></dl>
-                    </section>
-                </article>
+                  <section class="stack-section stack-section--first">
+                    <span class="meta-label">Current run</span>
+                    <dl class="fact-grid fact-grid--stack fact-grid--compact" id="reports-run-facts"></dl>
+                  </section>
 
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
-                      <p class="eyebrow">Runs</p>
-                      <h3>Report runs</h3>
-                    </div>
-                  </header>
-
-                  <div class="table-wrap">
+                  <section class="stack-section">
+                    <span class="meta-label">Recent runs</span>
+                    <div class="table-wrap">
                     <table class="data-table data-table--compact" aria-label="Report runs">
                       <thead>
                         <tr>
@@ -541,7 +521,8 @@
                       </thead>
                       <tbody id="reports-run-table-body"></tbody>
                     </table>
-                  </div>
+                    </div>
+                  </section>
                 </article>
               </aside>
             </section>
