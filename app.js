@@ -775,22 +775,24 @@ function renderReportsOverview(snapshot) {
   const boardHeadline =
     reportWatchlistMode === "all"
       ? boardRows.length
-        ? `${pluralize(manualReviewCount, "thread")} need operator review`
+        ? "Review board"
         : "Reports are in sync"
-      : `${activeViewLabel} · ${pluralize(filteredRows.length, "thread")}`;
+      : activeViewLabel;
 
   setAppBarHeader({
     eyebrow: "Reports",
     headline: boardHeadline,
     subline: latest
-      ? `${pluralize(manualReviewCount, "thread")} are blocked for review, ${pluralize(highPriorityCount, "thread")} need close watch, ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL, and ${pluralize(greenLaneCount, "thread")} can keep moving.`
+      ? reportWatchlistMode === "all"
+        ? `${pluralize(manualReviewCount, "thread")} are blocked, ${pluralize(highPriorityCount, "thread")} need close watch, ${pluralize(waitingOnKolCount, "thread")} are waiting only, and ${pluralize(greenLaneCount, "thread")} are safe to continue.`
+        : `${pluralize(filteredRows.length, "thread")} are in this lane. Open a row to work the full record.`
       : "No report snapshots are available yet.",
   });
   setTopStats([
     { label: "Snapshot", value: formatTimestamp(snapshot.generated_at || "") },
     { label: "View", value: activeViewLabel },
     { label: "Rows", value: String(filteredRows.length) },
-    { label: "Sort", value: getReportSortLabel(reportWatchlistSort) },
+    { label: "Blocked", value: String(manualReviewCount) },
   ]);
 }
 
@@ -1497,7 +1499,6 @@ function renderReportsPane(snapshot) {
   renderReportsActions(snapshot, allWatchlistRows, monitoringSummary);
   renderReportWatchlist(filteredWatchlistRows);
   renderReportThreadInspector(selectedThread, monitoringSummary);
-  renderReportsSelectionInspector(selectedThread, monitoringSummary);
   renderReportsWorkspace(selectedThread);
   renderTableRows(reportsSummaryTableBody, (reports.summary_rows || []).map((row) => [row.label || "", row.value || "-"]), {
     empty: "No coverage totals yet.",
@@ -1932,7 +1933,6 @@ function renderReportWatchlist(rows) {
             <span class="table-primary">
               <strong>${escapeHtml(row.kol_username || row.label || "Unknown")}</strong>
               <span>${escapeHtml(compactText(row.thread_id || row.source || "Thread row", 72))}</span>
-              <span>${escapeHtml("Open record")}</span>
             </span>
           </button>
         `,
@@ -1956,7 +1956,7 @@ function renderReportWatchlist(rows) {
       };
     }),
     {
-      empty: "No priority threads right now.",
+      empty: "No threads match this lane right now.",
       colspan: columns.length,
       allowHtml: true,
     },
@@ -2044,7 +2044,7 @@ function renderReportThreadInspector(selected, monitoringSummary) {
     reportsDetailRuntime,
     [
       { label: "Review queue pressure", value: `${pluralize(approvals, "approval")} and ${pluralize(escalations, "escalation")} are open overall` },
-      { label: "Focus bucket", value: titleCase(focusMode.replaceAll("_", " ")) },
+      { label: "Focus lane", value: getReportWatchlistModeLabel(focusMode) },
       { label: "Manual review", value: manualReview ? "Yes" : "No" },
       { label: "Waiting on KOL", value: waitingOnKol ? "Yes" : "No" },
       { label: "Green lane", value: greenLane ? "Yes" : "No" },
@@ -2078,62 +2078,61 @@ function renderReportThreadInspector(selected, monitoringSummary) {
 
 function renderReportsActions(snapshot, boardRows, monitoringSummary) {
   const manualReviewRows = boardRows.filter(needsManualReview);
-  const escalationRows = boardRows.filter(hasEscalationPressure);
+  const highPriorityRows = boardRows.filter(isHighPriorityThread);
   const greenLaneRows = boardRows.filter(isGreenLaneThread);
   const waitingOnKolRows = boardRows.filter(isWaitingOnKolThread);
-  const approvals = Number(monitoringSummary.pending_approval_count || 0);
   const escalations = Number(monitoringSummary.escalation_count || 0);
   const rows = [
     {
-      label: "Manual review",
+      label: "Blocked",
       value: manualReviewRows.length,
       summary: manualReviewRows.length
-        ? `${formatWatchlistNames(manualReviewRows)} are blocked until a human decides the next move.`
+        ? "Human review is still required before the next send."
         : "No thread is blocked on manual review right now.",
       tone: manualReviewRows.length ? "blocked" : "active",
       mode: "manual",
-      action: "Open blocked threads",
+      action: "Open blocked lane",
     },
     {
-      label: "High priority",
-      value: escalationRows.length || escalations,
-      summary: escalationRows.length || escalations
-        ? "These rows should stay visible because they carry escalation pressure or risky mismatches."
-        : "No escalation-heavy thread needs close watch right now.",
-      tone: escalationRows.length || escalations ? "pending" : "active",
+      label: "Watch closely",
+      value: highPriorityRows.length,
+      summary: highPriorityRows.length
+        ? "Urgent timing or risky mismatches still need operator eyes."
+        : "No thread needs close watch right now.",
+      tone: highPriorityRows.length ? "pending" : "active",
       mode: "priority",
-      action: "Open high priority",
+      action: escalations ? `Open watch lane · ${pluralize(escalations, "escalation")} open overall` : "Open watch lane",
     },
     {
-      label: "Waiting on KOL",
+      label: "Waiting only",
       value: waitingOnKolRows.length,
       summary: waitingOnKolRows.length
-        ? `${formatWatchlistNames(waitingOnKolRows)} are in a wait state and mainly need monitoring.`
+        ? "These threads are parked until the KOL replies or the state shifts."
         : "No visible thread is currently waiting on a KOL reply.",
       tone: waitingOnKolRows.length ? "pending" : "active",
       mode: "waiting",
-      action: "Open waiting threads",
+      action: "Open waiting lane",
     },
     {
-      label: "Green lane",
+      label: "Safe to continue",
       value: greenLaneRows.length,
       summary: greenLaneRows.length
-        ? `${formatWatchlistNames(greenLaneRows)} can keep moving without manual intervention.`
+        ? "These threads can keep moving without manual intervention."
         : "No low-friction lane is visible in this snapshot.",
       tone: greenLaneRows.length ? "active" : "pending",
       mode: "green",
-      action: "Open safe threads",
+      action: "Open safe lane",
     },
   ];
 
-  reportsActionSummary.textContent = "Start with blocked rows, then watch risky threads, then monitor waiting ones, and leave safe lanes to continue. Each lane filters the same board below.";
+  reportsActionSummary.textContent = "Use these lanes to cut the same board into blocked, watch, waiting, and safe work. Open a row only when you need the full thread page.";
   reportsActionList.innerHTML = "";
 
   for (const row of rows) {
     const active = reportWatchlistMode === row.mode;
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `summary-card summary-card-button${active ? " is-active" : ""}`;
+    button.className = `summary-card summary-card-button summary-card--${row.tone}${active ? " is-active" : ""}`;
     button.dataset.watchlistModeSet = row.mode;
     button.setAttribute("aria-pressed", active ? "true" : "false");
     button.innerHTML = `

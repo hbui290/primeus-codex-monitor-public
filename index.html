@@ -378,13 +378,12 @@
 
         <section class="route-pane" id="route-reports" hidden>
           <section class="reports-view reports-view--board" id="reports-board-view">
-            <section class="content-grid">
-              <div class="main-stack">
+            <div class="main-stack">
                 <article class="surface">
                   <header class="section-head">
                     <div>
                       <p class="eyebrow">Workflow</p>
-                      <h3>Review workflow</h3>
+                      <h3>Review Lanes</h3>
                     </div>
                   </header>
 
@@ -396,7 +395,7 @@
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Threads</p>
+                      <p class="eyebrow">Board</p>
                       <h3>Review board</h3>
                     </div>
                   </header>
@@ -469,34 +468,11 @@
                     </table>
                   </div>
                 </article>
-              </div>
-
-              <aside class="side-stack">
-                <article class="surface">
-                  <header class="section-head">
-                    <div>
-                      <p class="eyebrow">Selection</p>
-                      <h3>Selected Thread</h3>
-                    </div>
-                  </header>
-
-                  <p class="section-copy" id="approval-inspector-summary">Pick a row from the board to inspect why it matters and what should happen next.</p>
-
-                  <section class="stack-section stack-section--first">
-                    <span class="meta-label">Decision summary</span>
-                    <dl class="fact-grid fact-grid--stack fact-grid--compact" id="approval-inspector-facts"></dl>
-                  </section>
-
-                  <section class="stack-section">
-                    <span class="meta-label">Next move</span>
-                    <ul class="mini-list" id="approval-inspector-actions"></ul>
-                  </section>
-                </article>
 
                 <article class="surface">
                   <header class="section-head">
                     <div>
-                      <p class="eyebrow">Reports</p>
+                      <p class="eyebrow">Source</p>
                       <h3>Report source</h3>
                     </div>
                   </header>
@@ -524,14 +500,13 @@
                     </div>
                   </section>
                 </article>
-              </aside>
-            </section>
+            </div>
           </section>
 
           <section class="reports-view reports-view--detail" id="reports-detail-view" hidden>
             <article class="surface reports-detail-shell">
               <div class="reports-detail-topbar">
-                <button class="action-button" id="reports-detail-back" type="button">Back to board</button>
+                <button class="action-button" id="reports-detail-back" type="button">Back to review board</button>
                 <span class="meta-label" id="reports-detail-path">Reports / Thread</span>
               </div>
 

@@ -675,6 +675,21 @@ a:focus-visible,
   background: var(--accent-soft);
 }
 
+.summary-card--blocked {
+  border-color: rgba(139, 45, 41, 0.14);
+  background: rgba(243, 217, 215, 0.22);
+}
+
+.summary-card--pending {
+  border-color: rgba(138, 87, 22, 0.14);
+  background: rgba(244, 226, 199, 0.22);
+}
+
+.summary-card--active {
+  border-color: rgba(23, 98, 79, 0.14);
+  background: rgba(220, 239, 232, 0.22);
+}
+
 .summary-card-title {
   color: var(--muted);
   font-size: 11px;
