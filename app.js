@@ -11,8 +11,6 @@ const coordinationFacts = document.querySelector("#coordination-facts");
 const serviceHealth = document.querySelector("#service-health");
 const statChips = Array.from(document.querySelectorAll(".stat-chip"));
 const refreshButton = document.querySelector("#refresh-button");
-const appearanceThemeSelect = document.querySelector("#appearance-theme");
-const appearanceDensityControls = document.querySelector("#appearance-density-controls");
 const actionStatus = document.querySelector("#action-status");
 const statLabel1 = document.querySelector("#stat-label-1");
 const statLabel2 = document.querySelector("#stat-label-2");
@@ -156,12 +154,6 @@ let approvalFilterQuery = "";
 let approvalMode = "all";
 let currentApprovalCaseKey = "";
 const AUTO_REFRESH_MS = 60000;
-const APPEARANCE_THEME_KEY = "primeus-monitor-theme";
-const APPEARANCE_DENSITY_KEY = "primeus-monitor-density";
-const ALLOWED_THEMES = new Set(["paper", "control", "terminal"]);
-const ALLOWED_DENSITIES = new Set(["comfortable", "compact"]);
-let currentTheme = readPreference(APPEARANCE_THEME_KEY, "paper");
-let currentDensity = readPreference(APPEARANCE_DENSITY_KEY, "comfortable");
 
 const REPORT_BOARD_COLUMNS = [
   { key: "thread", label: "KOL thread", required: true },
@@ -229,20 +221,6 @@ reportWatchlistColumns.addEventListener("change", () => {
   currentReportsView = "board";
   renderReportsPane(currentSnapshot);
 });
-
-if (appearanceThemeSelect) {
-  appearanceThemeSelect.addEventListener("change", (event) => {
-    setThemePreference(String(event.target.value || "paper"));
-  });
-}
-
-if (appearanceDensityControls) {
-  appearanceDensityControls.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-density]");
-    if (!button) return;
-    setDensityPreference(button.dataset.density || "comfortable");
-  });
-}
 
 if (approvalModeFilters) {
   approvalModeFilters.addEventListener("click", (event) => {
@@ -522,53 +500,6 @@ agentForm.addEventListener("submit", async (event) => {
     `Saving ${currentAgentId} profile…`,
   );
 });
-
-function readPreference(key, fallback) {
-  try {
-    return localStorage.getItem(key) || fallback;
-  } catch (error) {
-    return fallback;
-  }
-}
-
-function writePreference(key, value) {
-  try {
-    localStorage.setItem(key, value);
-  } catch (error) {
-    // Ignore storage failures and keep current in-memory preferences.
-  }
-}
-
-function applyAppearancePreferences() {
-  const theme = ALLOWED_THEMES.has(currentTheme) ? currentTheme : "paper";
-  const density = ALLOWED_DENSITIES.has(currentDensity) ? currentDensity : "comfortable";
-  document.body.dataset.theme = theme;
-  document.body.dataset.density = density;
-
-  if (appearanceThemeSelect) {
-    appearanceThemeSelect.value = theme;
-  }
-
-  if (appearanceDensityControls) {
-    for (const button of Array.from(appearanceDensityControls.querySelectorAll("[data-density]"))) {
-      const active = (button.dataset.density || "") === density;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", active ? "true" : "false");
-    }
-  }
-}
-
-function setThemePreference(theme) {
-  currentTheme = ALLOWED_THEMES.has(theme) ? theme : "paper";
-  writePreference(APPEARANCE_THEME_KEY, currentTheme);
-  applyAppearancePreferences();
-}
-
-function setDensityPreference(density) {
-  currentDensity = ALLOWED_DENSITIES.has(density) ? density : "comfortable";
-  writePreference(APPEARANCE_DENSITY_KEY, currentDensity);
-  applyAppearancePreferences();
-}
 
 async function loadSnapshot() {
   const response = await fetch("/api/dashboard", { cache: "no-store" });
@@ -3519,8 +3450,6 @@ function sortRunsByGeneratedAt(runs) {
     .slice()
     .sort((a, b) => new Date(b.generated_at || 0).getTime() - new Date(a.generated_at || 0).getTime());
 }
-
-applyAppearancePreferences();
 
 loadSnapshot()
   .then(render)
