@@ -390,18 +390,18 @@
 
                   <p class="section-copy" id="reports-action-summary">Waiting for the next snapshot.</p>
 
-                  <ul class="attention-list" id="reports-action-list"></ul>
+                  <div class="summary-grid summary-grid--reports-flow" id="reports-action-list"></div>
                 </article>
 
                 <article class="surface">
                   <header class="section-head">
                     <div>
                       <p class="eyebrow">Threads</p>
-                      <h3>KOL status board</h3>
+                      <h3>Review board</h3>
                     </div>
                   </header>
 
-                  <p class="section-copy">This board is for fast scanning only. Open a row to inspect the full thread inside the same workspace.</p>
+                  <p class="section-copy">Scan the active review lanes here, then open a row when you need the full operator record.</p>
 
                   <div class="surface-toolbar surface-toolbar--stack">
                     <div class="surface-toolbar-row">
@@ -409,10 +409,10 @@
                         <span class="meta-label">Saved views</span>
                         <div class="filter-chip-row" id="report-watchlist-mode-filters" aria-label="Watchlist filters">
                           <button class="filter-chip is-active" type="button" data-watchlist-mode="all" data-watchlist-label="All">All</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="manual" data-watchlist-label="Manual Review">Manual Review</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="priority" data-watchlist-label="High Priority">High Priority</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="green" data-watchlist-label="Green Lane">Green Lane</button>
-                          <button class="filter-chip" type="button" data-watchlist-mode="waiting" data-watchlist-label="Waiting on KOL">Waiting on KOL</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="manual" data-watchlist-label="Blocked">Blocked</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="priority" data-watchlist-label="Watch closely">Watch closely</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="green" data-watchlist-label="Safe to continue">Safe to continue</button>
+                          <button class="filter-chip" type="button" data-watchlist-mode="waiting" data-watchlist-label="Waiting only">Waiting only</button>
                           <button class="filter-chip" type="button" data-watchlist-mode="john" data-watchlist-label="John">John</button>
                           <button class="filter-chip" type="button" data-watchlist-mode="sora" data-watchlist-label="Sora">Sora</button>
                         </div>
@@ -483,12 +483,12 @@
                   <p class="section-copy" id="approval-inspector-summary">Pick a row from the board to inspect why it matters and what should happen next.</p>
 
                   <section class="stack-section stack-section--first">
-                    <span class="meta-label">Current focus</span>
+                    <span class="meta-label">Decision summary</span>
                     <dl class="fact-grid fact-grid--stack fact-grid--compact" id="approval-inspector-facts"></dl>
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Suggested next step</span>
+                    <span class="meta-label">Next move</span>
                     <ul class="mini-list" id="approval-inspector-actions"></ul>
                   </section>
                 </article>
@@ -501,7 +501,7 @@
                     </div>
                   </header>
 
-                  <p class="section-copy" id="reports-run-summary">Pick a report run to inspect its coverage and freshness.</p>
+                  <p class="section-copy" id="reports-run-summary">Use the current monitoring run as the source of truth for this board and compare recent runs if counts feel off.</p>
 
                   <section class="stack-section stack-section--first">
                     <span class="meta-label">Current run</span>
@@ -553,12 +553,12 @@
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Conversation context</span>
+                    <span class="meta-label">Operator context</span>
                     <ul class="mini-list" id="reports-detail-context"></ul>
                   </section>
 
                   <section class="stack-section">
-                    <span class="meta-label">Related report and runtime context</span>
+                    <span class="meta-label">Source context</span>
                     <ul class="mini-list" id="reports-detail-runtime"></ul>
                   </section>
                 </div>

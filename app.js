@@ -1540,6 +1540,7 @@ function renderReportsSelectionInspector(selected, monitoringSummary) {
 
   renderFactGrid(approvalInspectorFacts, [
     { label: "KOL", value: selected.kol_username || selected.label || "Unknown" },
+    { label: "Workflow", value: getReportWorkflowStageLabel(selected) },
     { label: "Issue", value: selected.issue_label || titleCase(selected.issue || "review") },
     { label: "State", value: selected.status_label || titleCase(selected.status || "unknown") },
     { label: "Owner", value: selected.owner_label || titleCase(selected.owner || "unknown") },
@@ -1777,10 +1778,10 @@ function renderReportBoardHeaders() {
 function getReportWatchlistModeLabel(mode) {
   const labels = {
     all: "All threads",
-    manual: "Manual Review",
-    priority: "High Priority",
-    green: "Green Lane",
-    waiting: "Waiting on KOL",
+    manual: "Blocked",
+    priority: "Watch closely",
+    green: "Safe to continue",
+    waiting: "Waiting only",
     john: "John",
     sora: "Sora",
   };
@@ -2015,6 +2016,7 @@ function renderReportThreadInspector(selected, monitoringSummary) {
   renderFactGrid(reportsThreadFacts, [
     { label: "KOL handle", value: selected.kol_username || selected.label || "Unknown" },
     { label: "Thread id", value: selected.thread_id || selected.source || "-" },
+    { label: "Workflow", value: getReportWorkflowStageLabel(selected) },
     { label: "Owner", value: selected.owner_label || titleCase(selected.owner || "unknown") },
     { label: "Current state", value: selected.status_label || titleCase(selected.status || "unknown") },
     { label: "Decision lane", value: selected.lane_label || titleCase(selected.lane || "unknown") },
@@ -2124,23 +2126,32 @@ function renderReportsActions(snapshot, boardRows, monitoringSummary) {
     },
   ];
 
-  reportsActionSummary.textContent = "Read the monitoring flow from blocked work to safe continuation. Each lane filters the same board below.";
+  reportsActionSummary.textContent = "Start with blocked rows, then watch risky threads, then monitor waiting ones, and leave safe lanes to continue. Each lane filters the same board below.";
   reportsActionList.innerHTML = "";
 
   for (const row of rows) {
-    const li = document.createElement("li");
-    li.className = "attention-item";
-    li.innerHTML = `
-      <div class="attention-topline">
-        <strong>${escapeHtml(row.label)}</strong>
-        <span class="summary-count">${escapeHtml(String(row.value || 0))}</span>
-      </div>
-      <p class="attention-text">${escapeHtml(row.summary)}</p>
-      ${badge(humanizeStatus(row.tone), badgeClass(row.tone))}
-      ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">${escapeHtml(row.action)}</button>` : ""}
+    const active = reportWatchlistMode === row.mode;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `summary-card summary-card-button${active ? " is-active" : ""}`;
+    button.dataset.watchlistModeSet = row.mode;
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    button.innerHTML = `
+      <span class="summary-card-title">${escapeHtml(row.label)}</span>
+      <strong class="summary-card-value">${escapeHtml(String(row.value || 0))}</strong>
+      <p class="summary-card-support">${escapeHtml(row.summary)}</p>
+      <span class="summary-card-status">${escapeHtml(row.action)}</span>
     `;
-    reportsActionList.appendChild(li);
+    reportsActionList.appendChild(button);
   }
+}
+
+function getReportWorkflowStageLabel(row) {
+  if (needsManualReview(row)) return "Blocked";
+  if (isHighPriorityThread(row)) return "Watch closely";
+  if (isWaitingOnKolThread(row)) return "Waiting only";
+  if (isGreenLaneThread(row)) return "Safe to continue";
+  return "Needs attention";
 }
 
 function renderApprovalsPane(snapshot) {
