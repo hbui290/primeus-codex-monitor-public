@@ -266,26 +266,30 @@ if (approvalModeFilters) {
   });
 }
 
-reportsActionList.addEventListener("click", (event) => {
-  const routeButton = event.target.closest("[data-route-target]");
-  if (routeButton) {
-    navigateToRoute(routeButton.dataset.routeTarget || "reports");
-    return;
-  }
-  const modeButton = event.target.closest("[data-watchlist-mode-set]");
-  if (!modeButton) return;
-  reportWatchlistMode = modeButton.dataset.watchlistModeSet || "all";
-  currentReportsView = "board";
-  renderReportsPane(currentSnapshot);
-});
+if (reportsActionList) {
+  reportsActionList.addEventListener("click", (event) => {
+    const routeButton = event.target.closest("[data-route-target]");
+    if (routeButton) {
+      navigateToRoute(routeButton.dataset.routeTarget || "reports");
+      return;
+    }
+    const modeButton = event.target.closest("[data-watchlist-mode-set]");
+    if (!modeButton) return;
+    reportWatchlistMode = modeButton.dataset.watchlistModeSet || "all";
+    currentReportsView = "board";
+    renderReportsPane(currentSnapshot);
+  });
+}
 
-reportsStateList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-watchlist-mode-set]");
-  if (!button) return;
-  reportWatchlistMode = button.dataset.watchlistModeSet || "all";
-  currentReportsView = "board";
-  renderReportsPane(currentSnapshot);
-});
+if (reportsStateList) {
+  reportsStateList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-watchlist-mode-set]");
+    if (!button) return;
+    reportWatchlistMode = button.dataset.watchlistModeSet || "all";
+    currentReportsView = "board";
+    renderReportsPane(currentSnapshot);
+  });
+}
 
 reportsThreadActions.addEventListener("click", (event) => {
   const threadButton = event.target.closest("[data-open-report-thread]");
@@ -908,15 +912,15 @@ function renderReportsOverview(snapshot) {
   const boardHeadline =
     reportWatchlistMode === "all"
       ? boardRows.length
-        ? `${pluralize(manualReviewCount, "thread")} need manual review`
-        : "Reports are in sync"
+        ? `${pluralize(manualReviewCount, "thread")} are blocked in review`
+        : "Review workflow is clear"
       : `${activeViewLabel} · ${pluralize(filteredRows.length, "thread")}`;
 
   setAppBarHeader({
     eyebrow: "Reports",
     headline: boardHeadline,
     subline: latest
-      ? `${pluralize(manualReviewCount, "thread")} need review, ${pluralize(highPriorityCount, "thread")} are high priority, ${pluralize(greenLaneCount, "thread")} can keep moving, and ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL replies.`
+      ? `${pluralize(manualReviewCount, "thread")} are blocked, ${pluralize(highPriorityCount, "thread")} need close watch, ${pluralize(waitingOnKolCount, "thread")} are waiting on KOL replies, and ${pluralize(greenLaneCount, "thread")} can keep moving.`
       : "No report snapshots are available yet.",
   });
   setTopStats([
@@ -1632,7 +1636,6 @@ function renderReportsPane(snapshot) {
   renderReportWatchlist(filteredWatchlistRows);
   renderReportThreadInspector(selectedThread, monitoringSummary);
   renderReportsSelectionInspector(selectedThread, monitoringSummary);
-  renderReportsStateList(allWatchlistRows);
   renderReportsWorkspace(selectedThread);
   renderTableRows(reportsSummaryTableBody, (reports.summary_rows || []).map((row) => [row.label || "", row.value || "-"]), {
     empty: "No coverage totals yet.",
@@ -2216,93 +2219,71 @@ function renderReportsActions(snapshot, boardRows, monitoringSummary) {
   const waitingOnKolRows = boardRows.filter(isWaitingOnKolThread);
   const approvals = Number(monitoringSummary.pending_approval_count || 0);
   const escalations = Number(monitoringSummary.escalation_count || 0);
-  const rows = [];
-
-  if (manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(manualReviewRows.length, "thread")} need manual approval`,
-      summary: `${formatWatchlistNames(manualReviewRows)} still need human review before the next send.`,
-      tone: "blocked",
+  const steps = [
+    {
+      title: "Manual review",
+      value: manualReviewRows.length,
+      summary: manualReviewRows.length
+        ? `${formatWatchlistNames(manualReviewRows)} are blocked until a human decides the next send.`
+        : "No thread is blocked on manual review right now.",
+      tone: manualReviewRows.length ? "blocked" : "active",
       mode: "manual",
-      action: "Focus manual review",
-    });
-  }
-
-  if (escalationRows.length || escalations > 0) {
-    rows.push({
-      title: `${pluralize(escalationRows.length || escalations, "thread")} carry escalation pressure`,
-      summary: "These rows are carrying escalation context and should stay visible until the decision lands.",
-      tone: "blocked",
+      action: "Open blocked threads",
+    },
+    {
+      title: "High priority",
+      value: escalationRows.length || escalations,
+      summary: escalationRows.length || escalations
+        ? "These rows need close watch because they carry escalation pressure or decision risk."
+        : "No escalation-heavy thread needs close watch right now.",
+      tone: escalationRows.length || escalations ? "pending" : "active",
       mode: "priority",
-      action: "Focus high priority",
-    });
-  }
-
-  if (approvals > 0 && !manualReviewRows.length) {
-    rows.push({
-      title: `${pluralize(approvals, "approval")} are pending`,
-      summary: "Approvals are open even though no watchlist row is marked as manual review yet.",
-      tone: "pending",
-      route: "reports",
-      action: "Open review queue",
-    });
-  }
-
-  if (greenLaneRows.length) {
-    rows.push({
-      title: `${pluralize(greenLaneRows.length, "thread")} can keep moving`,
-      summary: `${formatWatchlistNames(greenLaneRows)} are in low-friction lanes and do not need manual review right now.`,
-      tone: "active",
-      mode: "green",
-      action: "Focus green lanes",
-    });
-  }
-
-  if (waitingOnKolRows.length) {
-    rows.push({
-      title: `${pluralize(waitingOnKolRows.length, "thread")} are waiting on KOL replies`,
-      summary: `${formatWatchlistNames(waitingOnKolRows)} are currently in a wait state, so they only need monitoring.`,
-      tone: "pending",
+      action: "Open high priority",
+    },
+    {
+      title: "Waiting on KOL",
+      value: waitingOnKolRows.length,
+      summary: waitingOnKolRows.length
+        ? `${formatWatchlistNames(waitingOnKolRows)} are in a wait state and mostly need monitoring.`
+        : "No visible thread is paused on a KOL reply.",
+      tone: waitingOnKolRows.length ? "pending" : "active",
       mode: "waiting",
-      action: "Focus waiting threads",
-    });
-  }
+      action: "Open waiting threads",
+    },
+    {
+      title: "Green lane",
+      value: greenLaneRows.length,
+      summary: greenLaneRows.length
+        ? `${formatWatchlistNames(greenLaneRows)} can keep moving without manual intervention.`
+        : "No low-friction lane is visible in this snapshot.",
+      tone: greenLaneRows.length ? "active" : "pending",
+      mode: "green",
+      action: "Open safe threads",
+    },
+  ];
 
-  reportsActionSummary.textContent = rows.length
-    ? "These queue cards use the same board rows as the table below, so counts and thread lists stay aligned."
-    : "No immediate report issue is visible in the current snapshot.";
+  reportsActionSummary.textContent = "Follow the workflow from blocked decisions to safe continuation. Each step filters the same board below.";
+  if (!reportsActionList) return;
   reportsActionList.innerHTML = "";
 
-  if (!rows.length) {
-    reportsActionList.innerHTML = `
-      <li class="attention-item">
-        <div class="attention-topline">
-          <strong>Report queue is clear.</strong>
-          ${badge("Stable", "active")}
-        </div>
-        <p class="attention-text">No approval-heavy or blocked KOL thread is visible in the current snapshot.</p>
-      </li>
+  for (const step of steps) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `summary-card summary-card-button summary-card--${step.tone}`;
+    button.dataset.watchlistModeSet = step.mode;
+    button.setAttribute("aria-label", `${step.title}: ${step.value}`);
+    button.innerHTML = `
+      <span class="summary-card-title">${escapeHtml(step.title)}</span>
+      <strong class="summary-card-value">${escapeHtml(String(step.value))}</strong>
+      <p class="summary-card-support">${escapeHtml(step.summary)}</p>
+      <span class="summary-card-status">${escapeHtml(step.action)}</span>
     `;
-    return;
-  }
-
-  for (const row of rows) {
-    const li = document.createElement("li");
-    li.className = "attention-item";
-    li.innerHTML = `
-      <div class="attention-topline">
-        <strong>${escapeHtml(row.title)}</strong>
-        ${badge(humanizeStatus(row.tone), badgeClass(row.tone))}
-      </div>
-      <p class="attention-text">${escapeHtml(row.summary)}</p>
-      ${row.mode ? `<button class="inline-action" type="button" data-watchlist-mode-set="${escapeHtml(row.mode)}">${escapeHtml(row.action)}</button>` : ""}
-      ${row.route ? `<button class="inline-action" type="button" data-route-target="${escapeHtml(row.route)}">${escapeHtml(row.action)}</button>` : ""}
-    `;
-    reportsActionList.appendChild(li);
+    reportsActionList.appendChild(button);
   }
 }
 
 function renderReportsStateList(rows) {
+  if (!reportsStateSummary || !reportsStateList) return;
   const visibleRows = [
     {
       label: "Manual review",
