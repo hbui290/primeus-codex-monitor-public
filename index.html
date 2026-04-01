@@ -195,6 +195,7 @@
                   </div>
                 </header>
 
+                <p class="section-copy" id="agent-attention-summary">Waiting for the next snapshot.</p>
                 <ul class="attention-list" id="agent-attention-list"></ul>
               </article>
             </div>
@@ -203,7 +204,7 @@
               <article class="surface">
                 <header class="section-head">
                   <div>
-                    <p class="eyebrow">Editor</p>
+                    <p class="eyebrow">Overview</p>
                     <h3>Selected agent</h3>
                   </div>
                 </header>
@@ -213,14 +214,26 @@
                   <p id="agent-editor-summary">Pick an agent from the table to inspect current state and edit its control profile.</p>
                 </div>
 
+                <div class="filter-chip-row agent-overview-badges" id="agent-overview-badges"></div>
+
                 <section class="stack-section">
                   <span class="meta-label">Current state</span>
                   <dl class="fact-grid fact-grid--stack fact-grid--compact" id="agent-live-facts"></dl>
                 </section>
 
                 <section class="stack-section">
+                  <span class="meta-label">Agent context</span>
+                  <ul class="mini-list" id="agent-context-list"></ul>
+                </section>
+
+                <section class="stack-section">
                   <span class="meta-label">Linked files</span>
                   <ul class="mini-list" id="agent-linked-files"></ul>
+                </section>
+
+                <section class="stack-section">
+                  <span class="meta-label">Editable control profile</span>
+                  <p class="form-note">Only stored controls change here. The live state above stays read-only.</p>
                 </section>
 
                 <form class="control-form" id="agent-form">
@@ -273,8 +286,8 @@
               <article class="surface">
                 <header class="section-head">
                   <div>
-                    <p class="eyebrow">Policy</p>
-                    <h3>Control summary</h3>
+                    <p class="eyebrow">Profile</p>
+                    <h3>Stored control summary</h3>
                   </div>
                 </header>
 

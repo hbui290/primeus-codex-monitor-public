@@ -1365,6 +1365,10 @@ a:focus-visible,
   gap: 6px;
 }
 
+.agent-overview-badges {
+  margin-top: 14px;
+}
+
 .editor-meta strong {
   font-size: 1rem;
 }

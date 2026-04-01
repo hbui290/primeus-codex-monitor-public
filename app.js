@@ -49,9 +49,12 @@ const agentTableBody = document.querySelector("#agent-table-body");
 const agentFilterInput = document.querySelector("#agent-filter-input");
 const agentSummaryGrid = document.querySelector("#agent-summary-grid");
 const agentAttentionList = document.querySelector("#agent-attention-list");
+const agentAttentionSummary = document.querySelector("#agent-attention-summary");
 const agentEditorTitle = document.querySelector("#agent-editor-title");
 const agentEditorSummary = document.querySelector("#agent-editor-summary");
+const agentOverviewBadges = document.querySelector("#agent-overview-badges");
 const agentLiveFacts = document.querySelector("#agent-live-facts");
+const agentContextList = document.querySelector("#agent-context-list");
 const agentLinkedFiles = document.querySelector("#agent-linked-files");
 const agentForm = document.querySelector("#agent-form");
 const agentDisplayName = document.querySelector("#agent-display-name");
@@ -456,6 +459,13 @@ skillsInstallForm.addEventListener("submit", async (event) => {
 });
 
 agentTableBody.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-select-agent]");
+  if (!button) return;
+  currentAgentId = button.dataset.selectAgent || currentAgentId;
+  renderAgentsPane(currentSnapshot);
+});
+
+agentAttentionList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-select-agent]");
   if (!button) return;
   currentAgentId = button.dataset.selectAgent || currentAgentId;
@@ -1331,15 +1341,21 @@ function renderAgentsPane(snapshot) {
     currentAgentId = agents[0] ? agents[0].id : (allAgents[0] ? allAgents[0].id : "primeus");
   }
 
+  const selected = getSelectedAgent(allAgents);
   renderAgentTable(agents);
-  renderAgentEditor(allAgents, editor);
+  renderAgentEditor(selected, editor);
   renderAgentAttention(allAgents);
-  renderFactGrid(agentSummaryGrid, [
-    { label: "Release", value: String(summary.release_version || "-") },
-    { label: "Mode", value: String(summary.recommended_mode || "-").toUpperCase() },
-    { label: "Codex daily ops", value: summary.codex_required_for_daily_ops ? "Required" : "Not required" },
-    { label: "Active threads", value: String(summary.total_active_threads != null ? summary.total_active_threads : 0) },
-  ]);
+  renderAgentProfileSummary(selected, summary);
+  if (agentAttentionSummary) {
+    const attentionCount = allAgents.filter(agentNeedsAttention).length;
+    if (!allAgents.length) {
+      agentAttentionSummary.textContent = "No agent data is available in the latest snapshot.";
+    } else if (!attentionCount) {
+      agentAttentionSummary.textContent = `${pluralize(allAgents.length, "agent")} are visible and no lane needs review right now.`;
+    } else {
+      agentAttentionSummary.textContent = `${pluralize(attentionCount, "agent")} need review in the current ${pluralize(allAgents.length, "agent")} roster.`;
+    }
+  }
 }
 
 function renderRuntimePane(snapshot) {
@@ -2516,12 +2532,13 @@ function renderAgentTable(agents) {
   );
 }
 
-function renderAgentEditor(agents, editor) {
-  const selected = agents.find((item) => item.id === currentAgentId) || agents[0] || null;
+function renderAgentEditor(selected, editor) {
   if (!selected) {
     agentEditorTitle.textContent = "No agent";
     agentEditorSummary.textContent = "No agent data is available in the latest snapshot.";
+    if (agentOverviewBadges) agentOverviewBadges.innerHTML = "";
     agentLiveFacts.innerHTML = "";
+    agentContextList.innerHTML = `<li class="mini-list-item"><span>No agent context.</span></li>`;
     agentLinkedFiles.innerHTML = `<li class="mini-list-item"><span>No linked files.</span></li>`;
     return;
   }
@@ -2530,6 +2547,13 @@ function renderAgentEditor(agents, editor) {
   const live = selected.live || {};
   agentEditorTitle.textContent = selected.label || "Unknown agent";
   agentEditorSummary.textContent = selected.summary || "No summary available.";
+  if (agentOverviewBadges) {
+    agentOverviewBadges.innerHTML = [
+      badge(selected.kind || "Agent", "stale"),
+      badge(humanizeStatus(selected.status || "unknown"), badgeClass(selected.status)),
+      badge(buildAgentHealth(selected), badgeClass(classifyAgentHealthTone(selected))),
+    ].join("");
+  }
 
   renderFactGrid(agentLiveFacts, [
     { label: "Status", value: humanizeStatus(selected.status || "unknown") },
@@ -2539,6 +2563,17 @@ function renderAgentEditor(agents, editor) {
     { label: "Approvals", value: live.approvals || metricValue(selected.metrics || [], "Approvals") || "-" },
     { label: "Health", value: buildAgentHealth(selected) },
   ]);
+
+  renderMiniList(
+    agentContextList,
+    [
+      { label: "Role", value: selected.kind || "Not recorded" },
+      { label: "Handle", value: selected.handle || "Not recorded" },
+      { label: "Last updated", value: formatOptionalTimestamp(controls.updated_at || "") },
+      { label: "Control file", value: basenamePath((editor || {}).file || "") || "Not recorded" },
+    ],
+    "No agent context.",
+  );
 
   renderMiniList(
     agentLinkedFiles,
@@ -2581,9 +2616,31 @@ function renderAgentAttention(agents) {
     li.innerHTML = `
       <strong>${escapeHtml(item.label || "Unknown")}</strong>
       <p class="attention-text">${escapeHtml(describeAgentAttention(item))}</p>
+      <button class="inline-action" type="button" data-select-agent="${escapeHtml(item.id || "")}">Review agent</button>
     `;
     agentAttentionList.appendChild(li);
   }
+}
+
+function renderAgentProfileSummary(selected, summary) {
+  if (!selected) {
+    renderFactGrid(agentSummaryGrid, [
+      { label: "Roster", value: "No agents loaded" },
+      { label: "Mode", value: String(summary.recommended_mode || "-").toUpperCase() },
+      { label: "Active threads", value: String(summary.total_active_threads != null ? summary.total_active_threads : 0) },
+      { label: "Codex daily ops", value: summary.codex_required_for_daily_ops ? "Required" : "Not required" },
+    ]);
+    return;
+  }
+
+  const controls = selected.controls || {};
+  renderFactGrid(agentSummaryGrid, [
+    { label: "Provider", value: controls.provider || "Not recorded" },
+    { label: "Lane", value: controls.lane || "Not recorded" },
+    { label: "Mode target", value: controls.mode_target || "Not recorded" },
+    { label: "Approval policy", value: compactText(controls.approval_policy || "Not recorded", 120) },
+    { label: "Last updated", value: formatOptionalTimestamp(controls.updated_at || "") },
+  ]);
 }
 
 function renderAgentMetrics(metrics) {
@@ -2623,6 +2680,10 @@ function buildAgentHealth(item) {
     }
   }
   return flags.length ? titleCase(flags.join(", ")) : "Healthy";
+}
+
+function classifyAgentHealthTone(item) {
+  return buildAgentHealth(item) === "Healthy" ? "active" : "pending";
 }
 
 function buildRuntimeWorkerMeta(item) {
@@ -3235,6 +3296,17 @@ function formatTimestamp(value) {
   });
 }
 
+function formatOptionalTimestamp(value) {
+  return value ? formatTimestamp(value) : "Not recorded";
+}
+
+function basenamePath(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  const parts = text.split("/").filter(Boolean);
+  return parts[parts.length - 1] || text;
+}
+
 function describeSnapshotAge(value) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value || "-";
@@ -3297,6 +3369,10 @@ function filterAgentRows(items) {
       .toLowerCase();
     return haystack.includes(agentFilterQuery);
   });
+}
+
+function getSelectedAgent(items) {
+  return items.find((item) => item.id === currentAgentId) || items[0] || null;
 }
 
 function filterWatchlistRows(rows) {
